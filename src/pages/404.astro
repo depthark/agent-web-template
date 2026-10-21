@@ -1,0 +1,18 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import Button from "@/components/ui/Button.astro";
+import { withBase } from "@/lib/navigation";
+---
+
+<BaseLayout title="Stránka nenalezena" description="Tato stránka neexistuje nebo byla přesunuta." pathname="/404/" noindex>
+  <SiteHeader pathname={Astro.url.pathname} />
+  <main id="main" class="mx-auto flex min-h-[60svh] max-w-3xl flex-col items-center justify-center gap-6 px-4 py-24 text-center">
+    <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">Chyba 404</p>
+    <h1 class="text-4xl text-foreground md:text-5xl">Stránka nenalezena</h1>
+    <p class="text-lg leading-8 text-muted">Odkaz je neplatný nebo stránka byla přesunuta.</p>
+    <Button as="a" href={withBase("/")} variant="primary" size="lg" rel={undefined}>Zpět na úvod</Button>
+  </main>
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,284 @@
+# Decap CMS – https://decapcms.org/docs/configuration-options/
+#
+# Content lives in src/data/content/*.json and is committed to GitHub.
+# Login runs through the Cloudflare Pages Functions in /functions/api (GitHub
+# OAuth app, see the decap-cms skill). Local editing: `bun run cms:local` next to
+# `bun run dev`, then open http://localhost:4321/admin/.
+
+backend:
+  name: github
+  repo: OWNER/REPO # ← set for a new site (new-project skill)
+  branch: main
+  base_url: https://www.example.cz # ← production URL (OAuth functions run there)
+  auth_endpoint: api/auth
+  squash_merges: true
+  commit_messages:
+    create: "content({{collection}}): create {{slug}}"
+    update: "content({{collection}}): update {{slug}}"
+    delete: "content({{collection}}): delete {{slug}}"
+    uploadMedia: "content(media): upload {{path}}"
+    deleteMedia: "content(media): delete {{path}}"
+    openAuthoring: "content: {{message}}"
+
+# Draft → review → ready → publish. Every draft is a pull request, so
+# Cloudflare builds a preview before anything goes live.
+publish_mode: editorial_workflow
+local_backend: true
+
+locale: cs
+site_url: https://www.example.cz
+display_url: https://www.example.cz
+logo_url: /images/favicons/web-app-manifest-192x192.png
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# Photos are compressed to AVIF in the editor's browser and committed to
+# public/gallery/ by the "photo" and "project-gallery" widgets
+# (photo-upload.js → image-pipeline.js + repo-store.js). No image service.
+# Decap's own media library is only a fallback.
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  # ------------------------------------------------------------- Projekty
+  - name: projekty
+    label: Projekty
+    label_singular: Projekt
+    description: >-
+      Stránka Projekty (/projekty/). Každá položka je jeden
+      projekt – nadpis, podnadpis, popis a galerie fotek. Fotky nahrajete přímo
+      v editoru, pořadí určujete šipkami. První fotka je v galerii velká.
+    folder: src/data/content/projects
+    extension: json
+    format: json
+    create: true
+    delete: true
+    slug: "{{fields.slug}}"
+    identifier_field: title
+    summary: "{{order}}. {{title}}"
+    sortable_fields: ["order", "title"]
+    editor:
+      preview: false
+    fields:
+      - { name: title, label: Nadpis, widget: string, hint: "Název projektu, krátce a výstižně." }
+      - { name: subtitle, label: Podnadpis, widget: string, required: false, hint: "Krátký řádek pod nadpisem, např. Místo · rok." }
+      - name: text
+        label: Popis
+        widget: markdown
+        modes: [rich_text]
+        minimal: true
+        buttons: [bold, italic, bulleted-list, numbered-list, link]
+        editor_components: []
+        hint: "Co jste řešili a jak. Tučné písmo, odrážky i číslovaný seznam najdete na liště nad textem."
+      - name: images
+        label: Fotky
+        widget: project-gallery
+        default: []
+      - name: order
+        label: Pořadí na stránce
+        widget: number
+        value_type: int
+        min: 1
+        default: 1
+        hint: Menší číslo = výš na stránce (nejnovější projekt dejte na 1).
+      - name: slug
+        label: Adresa projektu
+        widget: string
+        pattern: ["^[a-z0-9-]+$", "Jen malá písmena bez diakritiky, čísla a pomlčky, např. novy-projekt"]
+        hint: Část odkazu – /projekty/#novy-projekt. Po vytvoření už neměňte (podle ní se jmenuje složka s fotkami projektu).
+
+  # -------------------------------------------------------------- Stránky
+  - name: stranky
+    label: Stránky
+    description: Texty jednotlivých stránek webu.
+    editor:
+      preview: false
+    files:
+      - name: uvod
+        label: Úvodní stránka
+        file: src/data/content/home.json
+        fields:
+          - name: hero
+            label: Úvodní fotka a hlavní text
+            widget: object
+            fields:
+              - { name: eyebrow, label: Drobný text nad nadpisem, widget: string }
+              - { name: title, label: Hlavní nadpis, widget: text, hint: "Krátce a výstižně – je to první, co návštěvník uvidí." }
+              - { name: text, label: Podnadpis, widget: text, required: false, hint: "Nepovinné – když zůstane prázdné, pod nadpisem nic není." }
+              - { name: image, label: Fotka na pozadí, widget: photo, hint: "Na šířku, ideálně 2400 px. Zobrazuje se ztmavená." }
+              - { name: imageAlt, label: Popis fotky, widget: string, hint: "Co je na fotce – pro nevidomé a vyhledávače." }
+              - name: primaryCta
+                label: Hlavní tlačítko
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: label, label: Text, widget: string }
+                  - { name: href, label: Odkaz, widget: string, hint: "Např. /kontakt/#poptavka (rovnou na formulář) nebo /projekty/" }
+              - name: secondaryCta
+                label: Druhé tlačítko
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: label, label: Text, widget: string }
+                  - { name: href, label: Odkaz, widget: string }
+          - name: features
+            label: Výhody (karty pod úvodní fotkou)
+            widget: object
+            collapsed: true
+            fields:
+              - { name: eyebrow, label: Drobný text, widget: string }
+              - { name: title, label: Nadpis, widget: string }
+              - name: items
+                label: Karty
+                label_singular: kartu
+                widget: list
+                summary: "{{fields.title}}"
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - { name: text, label: Text, widget: text }
+          - name: faq
+            label: Časté dotazy
+            label_singular: otázku
+            widget: list
+            collapsed: true
+            summary: "{{fields.question}}"
+            hint: Zobrazí se na úvodní stránce a Google je může ukázat přímo ve výsledcích hledání.
+            fields:
+              - { name: question, label: Otázka, widget: string }
+              - { name: answer, label: Odpověď, widget: text }
+          - name: cta
+            label: Výzva na konci stránky
+            widget: object
+            collapsed: true
+            fields:
+              - { name: eyebrow, label: Drobný text, widget: string }
+              - { name: title, label: Nadpis, widget: text }
+              - { name: label, label: Text tlačítka, widget: string }
+              - { name: href, label: Odkaz tlačítka, widget: string }
+          - &seo
+            name: seo
+            label: Vyhledávače (SEO)
+            widget: object
+            collapsed: true
+            fields:
+              - { name: title, label: Titulek stránky, widget: string, hint: "Do 60 znaků. Zobrazí se v Googlu a na záložce prohlížeče." }
+              - { name: description, label: Popis stránky, widget: text, hint: "120–160 znaků. Text pod odkazem v Googlu." }
+              - { name: keywords, label: Klíčová slova stránky, widget: list, required: false, hint: "Doplní se ke klíčovým slovům z Nastavení." }
+
+      - name: projekty-stranka
+        label: Projekty – úvod stránky
+        file: src/data/content/projects.json
+        fields:
+          - { name: eyebrow, label: Drobný text, widget: string }
+          - { name: title, label: Nadpis, widget: string }
+          - { name: text, label: Text, widget: text }
+          - *seo
+
+      - name: kontakt
+        label: Kontakt
+        file: src/data/content/contact.json
+        fields:
+          - { name: title, label: Nadpis, widget: string }
+          - { name: text, label: Text, widget: text }
+          - name: form
+            label: Formulář
+            widget: object
+            collapsed: true
+            fields:
+              - { name: recipients, label: Komu chodí poptávky, widget: list, field: { name: email, label: E-mail, widget: string }, required: false, hint: "Adresy, na které web pošle poptávku z formuláře. Když je seznam prázdný, poptávka jde všem kontaktům z Nastavení." }
+              - { name: topics, label: Možnosti „Co řešíte“, widget: list, field: { name: topic, label: Možnost, widget: string }, required: false, hint: "Nabídka v rozbalovacím poli formuláře. Prázdné = pole se nezobrazí." }
+              - { name: successTitle, label: Nadpis po odeslání, widget: string, hint: "Zobrazí se na webu hned po odeslání." }
+              - { name: successText, label: Text po odeslání, widget: text }
+              - { name: confirmationSubject, label: Předmět potvrzovacího e-mailu, widget: string, hint: "E-mail, který dostane zákazník jako potvrzení." }
+              - { name: confirmationText, label: Text potvrzovacího e-mailu, widget: text, hint: "Pod text se automaticky připojí kopie zprávy a kontakty." }
+          - *seo
+
+  # ------------------------------------------------------------ Nastavení
+  - name: nastaveni
+    label: Nastavení
+    description: Kontakty, adresa, sociální sítě a údaje pro vyhledávače – platí pro celý web.
+    editor:
+      preview: false
+    files:
+      - name: firma
+        label: Firma a kontakty
+        file: src/data/content/settings.json
+        fields:
+          - { name: name, label: Název firmy, widget: string }
+          - { name: tagline, label: Podtitul, widget: string }
+          - { name: description, label: Popis firmy (vyhledávače), widget: text }
+          - { name: language, label: Jazyk webu, widget: hidden, default: cs }
+          - name: keywords
+            label: Klíčová slova
+            widget: list
+            allow_add: true
+            field: { name: keyword, label: Slovo, widget: string }
+          - { name: googleSiteVerification, label: Ověření Google Search Console, widget: string, required: false, hint: "Kód z meta tagu google-site-verification. Neměnit." }
+          - name: analytics
+            label: Měření návštěvnosti
+            widget: object
+            collapsed: true
+            fields:
+              - { name: gtmId, label: Google Tag Manager ID, widget: string, required: false, hint: "Např. GTM-XXXXXXX. Prázdné = bez měření." }
+          - name: social
+            label: Sociální sítě
+            widget: object
+            collapsed: true
+            fields:
+              - { name: facebook, label: Facebook, widget: string, required: false }
+              - { name: instagram, label: Instagram, widget: string, required: false }
+          - name: company
+            label: Firma a adresa
+            widget: object
+            fields:
+              - name: contacts
+                label: Kontaktní osoby
+                label_singular: kontakt
+                widget: list
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: name, label: Jméno, widget: string }
+                  - { name: role, label: Pozice, widget: string }
+                  - { name: phone, label: Telefon, widget: string, hint: "Ve tvaru +420 777 000 000" }
+                  - { name: email, label: E-mail, widget: string }
+              - { name: street, label: Ulice a číslo, widget: string }
+              - { name: postalCode, label: PSČ, widget: string }
+              - { name: city, label: Město, widget: string }
+              - { name: region, label: Kraj, widget: string }
+              - { name: country, label: Země (kód), widget: string, default: CZ }
+              - { name: openingNote, label: Poznámka k návštěvě, widget: string }
+              - name: openingHours
+                label: Otevírací doba
+                label_singular: řádek
+                widget: list
+                collapsed: true
+                summary: "{{fields.opens}}–{{fields.closes}}"
+                fields:
+                  - name: days
+                    label: Dny
+                    widget: select
+                    multiple: true
+                    options:
+                      - { label: Pondělí, value: Monday }
+                      - { label: Úterý, value: Tuesday }
+                      - { label: Středa, value: Wednesday }
+                      - { label: Čtvrtek, value: Thursday }
+                      - { label: Pátek, value: Friday }
+                      - { label: Sobota, value: Saturday }
+                      - { label: Neděle, value: Sunday }
+                  - { name: opens, label: Od, widget: string, pattern: ["^\\d{2}:\\d{2}$", "Ve tvaru 09:00"] }
+                  - { name: closes, label: Do, widget: string, pattern: ["^\\d{2}:\\d{2}$", "Ve tvaru 17:00"] }
+              - { name: legalName, label: Provozovatel, widget: string }
+              - { name: ico, label: IČO, widget: string, required: false }
+              - { name: areaServed, label: Kde působíte, widget: string }
+              - name: geo
+                label: Poloha na mapě (GPS)
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: latitude, label: Zeměpisná šířka, widget: number, value_type: float }
+                  - { name: longitude, label: Zeměpisná délka, widget: number, value_type: float }
+              - { name: mapEmbed, label: Odkaz na vloženou mapu Google, widget: text, required: false, hint: "Google Mapy → Sdílet → Vložit mapu → zkopírujte adresu ze src=\"…\"." }

@@ -1,0 +1,86 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SectionIntro from "@/components/SectionIntro.astro";
+import ProjectSection from "@/components/ProjectSection.astro";
+import Button from "@/components/ui/Button.astro";
+import { site } from "@/data/site";
+import { projectGalleries } from "@/lib/structured-data";
+import { withBase } from "@/lib/navigation";
+
+const page = site.projectsPage;
+---
+
+<BaseLayout
+  title={page.seo.title}
+  description={page.seo.description}
+  keywords={page.seo.keywords}
+  pageType="CollectionPage"
+  schema={projectGalleries(site.projects)}
+  pathname="/projekty/"
+  breadcrumbs={[
+    { name: "Úvod", href: "/" },
+    { name: "Projekty", href: "/projekty/" },
+  ]}
+>
+  <SiteHeader pathname={Astro.url.pathname} />
+  <main id="main" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
+    <SectionIntro level={1} eyebrow={page.eyebrow} title={page.title} text={page.text} />
+
+    {
+      site.projects.length > 0 ? (
+        <div class="mt-10 sm:mt-12">
+          {site.projects.map((project) => <ProjectSection project={project} />)}
+        </div>
+      ) : (
+        <section
+          class="mt-12 rounded-3xl border border-dashed border-border-strong bg-surface px-6 py-14 text-center sm:px-10"
+          aria-labelledby="projects-empty-title"
+        >
+          <h2 id="projects-empty-title" class="text-2xl text-foreground sm:text-3xl">Projekty právě doplňujeme</h2>
+          <p class="mx-auto mt-3 max-w-xl leading-7 text-muted">
+            Ukázky naší práce tu brzy najdete. Mezitím je rádi ukážeme osobně.
+          </p>
+          <div class="mt-6 flex justify-center">
+            <Button as="a" href={withBase("/kontakt/#poptavka")} variant="primary" size="md" rel={undefined}>
+              Napsat poptávku
+            </Button>
+          </div>
+        </section>
+      )
+    }
+  </main>
+  <SiteFooter />
+</BaseLayout>
+
+<script>
+  import { Fancybox } from "@fancyapps/ui";
+
+  // Lightbox styles are only needed once a photo is opened.
+  let styles: Promise<unknown> | undefined;
+  const loadStyles = () => (styles ??= import("@fancyapps/ui/dist/fancybox/fancybox.css"));
+  document.addEventListener("pointerover", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles(), { passive: true });
+  document.addEventListener("focusin", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles());
+
+  const init = () =>
+    Fancybox.bind("[data-fancybox]", {
+      Hash: true,
+      Toolbar: {
+        display: {
+          left: ["infobar"],
+          middle: [],
+          right: ["slideshow", "thumbs", "close"],
+        },
+      },
+      Images: { zoom: true },
+      on: { init: () => loadStyles() },
+    } as unknown as Parameters<typeof Fancybox.bind>[1]);
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+  document.addEventListener("astro:page-load", init);
+</script>

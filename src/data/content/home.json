@@ -1,0 +1,56 @@
+{
+  "seo": {
+    "title": "Hlavní služba ve městě",
+    "description": "Popis úvodní stránky pro Google (do 160 znaků): co děláte, pro koho a proč právě vy.",
+    "keywords": []
+  },
+  "hero": {
+    "eyebrow": "Obor · Město",
+    "title": "Krátký, jasný slib pro zákazníka.",
+    "text": "",
+    "image": "/gallery/web/hero",
+    "imageAlt": "Popis úvodní fotky",
+    "primaryCta": {
+      "href": "/kontakt/#poptavka",
+      "label": "Nezávazná poptávka"
+    },
+    "secondaryCta": {
+      "href": "/projekty/",
+      "label": "Prohlédnout projekty"
+    }
+  },
+  "features": {
+    "eyebrow": "Co děláme",
+    "title": "Tři důvody, proč se ozvat právě nám",
+    "items": [
+      {
+        "title": "První výhoda",
+        "text": "Jedna nebo dvě věty o přínosu pro zákazníka, ne o firmě."
+      },
+      {
+        "title": "Druhá výhoda",
+        "text": "Konkrétní a ověřitelné: čísla, termíny, zkušenosti."
+      },
+      {
+        "title": "Třetí výhoda",
+        "text": "Co zákazník získá, když se rozhodne pro vás."
+      }
+    ]
+  },
+  "faq": [
+    {
+      "question": "Častá otázka zákazníka?",
+      "answer": "Stručná a konkrétní odpověď. Otázky se zobrazují i ve výsledcích Google (FAQPage)."
+    },
+    {
+      "question": "Kolik to stojí?",
+      "answer": "Orientační cena nebo postup, jak ji zjistit."
+    }
+  ],
+  "cta": {
+    "eyebrow": "Další krok",
+    "title": "Pojďme probrat, co potřebujete.",
+    "label": "Napsat poptávku",
+    "href": "/kontakt/#poptavka"
+  }
+}

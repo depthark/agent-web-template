@@ -1,0 +1,12 @@
+{
+  "order": 1,
+  "slug": "ukazkovy-projekt",
+  "title": "Ukázkový projekt",
+  "subtitle": "Místo · rok",
+  "text": "Popis projektu v **Markdownu** – tučné písmo, odrážky a odkazy z editoru v administraci.\n\n- co bylo zadání\n- co jsme navrhli\n- jak to dopadlo",
+  "images": [
+    { "src": "/gallery/projekty/ukazkovy-projekt/ukazkovy-projekt-01", "alt": "Ukázková fotka 1", "hidden": false },
+    { "src": "/gallery/projekty/ukazkovy-projekt/ukazkovy-projekt-02", "alt": "Ukázková fotka 2", "hidden": false },
+    { "src": "/gallery/projekty/ukazkovy-projekt/ukazkovy-projekt-03", "alt": "Ukázková fotka 3", "hidden": false }
+  ]
+}

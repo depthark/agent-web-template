@@ -1,0 +1,25 @@
+---
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  text?: string;
+  align?: "left" | "center";
+  headingId?: string;
+  /** 1 for the page's main heading (one per page), 2 for sections. */
+  level?: 1 | 2;
+}
+
+const { eyebrow, title, text, align = "left", headingId, level = 2 } = Astro.props;
+const Heading = level === 1 ? "h1" : "h2";
+const centered = align === "center";
+---
+
+<div class:list={["space-y-4", centered && "mx-auto max-w-3xl text-center"]}>
+  {eyebrow && (
+    <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">
+      {eyebrow}
+    </p>
+  )}
+  <Heading id={headingId} class="text-balance text-2xl leading-tight text-foreground sm:text-3xl md:text-5xl">{title}</Heading>
+  {text && <p class:list={["text-base leading-7 text-muted sm:text-lg sm:leading-8", !centered && "max-w-3xl"]}>{text}</p>}
+</div>

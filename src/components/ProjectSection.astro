@@ -1,0 +1,162 @@
+---
+/**
+ * One project on /projekty/: title, subtitle, rich-text description and gallery.
+ *
+ * Photos are image sets in the repo (src/lib/gallery.ts). Tiles offer at most
+ * 800 px (1200 px for the large first tile) and crop with the CMS focus point;
+ * the lightbox gets its own srcset from 1200 px up, loaded only on click, so
+ * phones never download the 2400 px file.
+ */
+import type { Project } from "@/data/site";
+import { getProjectMedia } from "@/lib/gallery";
+import { focusStyle, LIGHTBOX_MIN, pick, srcsetOf, TILE_MAX, urlOf } from "@/lib/image-set";
+import { renderMarkdown } from "@/lib/markdown";
+
+export interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const galleryId = `project-${project.slug}`;
+const headingId = `${galleryId}-title`;
+const descriptionId = `${galleryId}-description`;
+const media = getProjectMedia(project);
+const descriptionHtml = renderMarkdown(project.text);
+const leads = media.length > 1;
+const tileSizes = "(min-width: 1024px) 320px, (min-width: 640px) 45vw, 92vw";
+const leadSizes = "(min-width: 1024px) 660px, 92vw";
+---
+
+<section
+  id={project.slug}
+  class="grid gap-8 border-t border-border py-12 first:border-t-0 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14"
+  aria-labelledby={headingId}
+  aria-describedby={descriptionId}
+>
+  <div class="space-y-4 lg:sticky lg:top-28 lg:self-start" data-reveal>
+    <h2 id={headingId} class="text-3xl leading-tight text-foreground">{project.title}</h2>
+    {
+      project.subtitle && (
+        <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">{project.subtitle}</p>
+      )
+    }
+    <div id={descriptionId} class="project-text text-base leading-8 text-muted" set:html={descriptionHtml} />
+  </div>
+
+  {
+    media.length > 0 && (
+      <ul class="references-grid list-none py-4" aria-label={`Galerie — ${project.title}`}>
+        {media.map(({ alt, set, focus }, index) => {
+          const lead = leads && index === 0;
+          const max = lead ? LIGHTBOX_MIN : TILE_MAX;
+          return (
+            <li data-reveal style={`--reveal-i: ${index % 4}`}>
+              <a
+                href={urlOf(set, pick(set, 1800))}
+                data-fancybox={galleryId}
+                data-caption={alt}
+                data-thumb-src={urlOf(set, set.widths[0])}
+                data-srcset={srcsetOf(set, { min: LIGHTBOX_MIN })}
+                data-sizes={`min(100vw, ${Math.round((100 * set.width) / set.height)}vh)`}
+                data-width={set.width}
+                data-height={set.height}
+                aria-label={`Zvětšit: ${alt}`}
+                class="glass-hover group relative block overflow-hidden rounded-lg bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lifted"
+              >
+                <img
+                  src={urlOf(set, pick(set, Math.min(400, max)))}
+                  srcset={srcsetOf(set, { max })}
+                  sizes={`auto, ${lead ? leadSizes : tileSizes}`}
+                  alt={alt}
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  decoding="async"
+                  style={focusStyle(focus)}
+                  class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    )
+  }
+</section>
+
+<style>
+  /* Rich text from the CMS editor: paragraphs, bold, lists, links. */
+  .project-text :global(> * + *) {
+    margin-top: calc(var(--spacing) * 4);
+  }
+
+  .project-text :global(strong) {
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  .project-text :global(ul),
+  .project-text :global(ol) {
+    display: grid;
+    gap: calc(var(--spacing) * 2);
+    padding-left: 1.25rem;
+  }
+
+  .project-text :global(ul) {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .project-text :global(ul > li) {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+
+  .project-text :global(ul > li)::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 0.8em;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 9999px;
+    background: var(--color-primary);
+  }
+
+  .project-text :global(ol) {
+    list-style: decimal;
+  }
+
+  .project-text :global(ol > li)::marker {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .project-text :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .project-text :global(a:hover) {
+    color: var(--color-primary-hover);
+  }
+
+  .references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+    gap: calc(var(--spacing) * 4);
+  }
+
+  /* First tile leads: double size on wider screens. */
+  @media (min-width: 640px) {
+    .references-grid > :global(li:first-child:not(:only-child)) {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .references-grid > :global(li:first-child:not(:only-child) img) {
+      height: 100%;
+    }
+  }
+</style>

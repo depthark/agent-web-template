@@ -1,0 +1,23 @@
+{
+  "seo": {
+    "title": "Kontakt",
+    "description": "Kontaktujte nás – telefon, e-mail, adresa a poptávkový formulář.",
+    "keywords": []
+  },
+  "title": "Pojďme se domluvit",
+  "text": "Napište nám pár vět o tom, co potřebujete, a ozveme se s dalším postupem.",
+  "form": {
+    "recipients": [
+      "info@example.cz"
+    ],
+    "topics": [
+      "První služba",
+      "Druhá služba",
+      "Něco jiného"
+    ],
+    "successTitle": "Zpráva byla úspěšně odeslána",
+    "successText": "Děkujeme za vaši zprávu, budeme vás kontaktovat v nejbližším možném termínu.",
+    "confirmationSubject": "Děkujeme za vaši zprávu",
+    "confirmationText": "Dobrý den,\n\nděkujeme za vaši zprávu, budeme vás kontaktovat v nejbližším možném termínu.\n\nNíže posíláme kopii toho, co jste nám napsali."
+  }
+}

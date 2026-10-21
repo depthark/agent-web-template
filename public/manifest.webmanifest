@@ -1,0 +1,78 @@
+{
+  "id": "./",
+  "name": "Název firmy – krátký podtitul",
+  "short_name": "Název firmy",
+  "description": "Jedna věta o firmě (stejná jako v Nastavení).",
+  "lang": "cs",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#f8f9fb",
+  "theme_color": "#1b1d24",
+  "categories": [
+    "business"
+  ],
+  "icons": [
+    {
+      "src": "images/favicons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "images/favicons/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/favicons/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/favicons/maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/favicons/maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projekty",
+      "short_name": "Projekty",
+      "url": "projekty/?source=pwa",
+      "icons": [
+        {
+          "src": "images/favicons/web-app-manifest-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Kontakt",
+      "short_name": "Kontakt",
+      "url": "kontakt/?source=pwa",
+      "icons": [
+        {
+          "src": "images/favicons/web-app-manifest-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

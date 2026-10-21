@@ -1,0 +1,227 @@
+---
+import { site } from "@/data/site";
+import { withBase } from "@/lib/navigation";
+import SocialLinks from "./SocialLinks.astro";
+
+export interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+const activePath =
+  pathname === "/" ? "/" : pathname.endsWith("/") ? pathname : `${pathname}/`;
+---
+
+<div class="group/menu relative lg:hidden" data-mobile-menu data-state="closed">
+  <button
+    type="button"
+    class="relative z-[calc(var(--z-modal)+1)] inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-background/60 text-foreground backdrop-blur transition-colors duration-fast ease-standard hover:border-primary hover:text-primary focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    data-mobile-menu-toggle
+    aria-controls="mobile-menu-panel"
+    aria-expanded="false"
+    aria-label="Otevřít navigaci"
+  >
+    <span class="relative block h-4 w-5" aria-hidden="true">
+      <span
+        class="mobile-menu__bar absolute inset-x-0 top-0 h-0.5 origin-center rounded-full bg-current"
+      ></span>
+      <span
+        class="mobile-menu__bar absolute inset-x-0 top-1/2 h-0.5 origin-center -translate-y-1/2 rounded-full bg-current"
+      ></span>
+      <span
+        class="mobile-menu__bar absolute inset-x-0 bottom-0 h-0.5 origin-center rounded-full bg-current"
+      ></span>
+    </span>
+    <span class="sr-only" data-mobile-menu-label>Otevřít navigaci</span>
+  </button>
+
+  <!-- Panel only: the site header stays on top of it (SiteHeader lifts its
+       content above the panel), so logo, name and toggle never change. -->
+  <div
+    id="mobile-menu-panel"
+    class="pointer-events-none fixed inset-0 z-[var(--z-modal)] flex flex-col group-data-[state=open]/menu:pointer-events-auto [&[inert]]:invisible"
+    inert
+  >
+    <div
+      class="mobile-menu__backdrop absolute inset-0 opacity-0 transition-opacity duration-standard ease-out-soft group-data-[state=open]/menu:opacity-100"
+      aria-hidden="true"
+    ></div>
+
+    <div
+      class="glass-strong relative m-auto flex h-full w-full -translate-y-full flex-col gap-6 overflow-y-auto px-4 pt-[calc(var(--header-height)+1.5rem)] pb-8 opacity-0 transition-[transform,opacity] duration-slow ease-out-soft group-data-[state=open]/menu:translate-y-0 group-data-[state=open]/menu:opacity-100 sm:px-6 min-[480px]:gap-8 min-[480px]:pb-10 lg:px-8 motion-reduce:transition-none"
+    >
+      <nav class="flex w-full flex-1 items-center" aria-label="Hlavní navigace">
+        <ul class="flex w-full list-none flex-col gap-2 p-0 m-0">
+          {
+            site.nav.map((item, index) => {
+              const isActive = activePath === item.href;
+              return (
+                <li
+                  class="mobile-menu__item translate-y-3 opacity-0 transition-[opacity,transform] duration-standard ease-out-soft group-data-[state=open]/menu:translate-y-0 group-data-[state=open]/menu:opacity-100 motion-reduce:transition-none"
+                  style={`--i:${index};`}
+                >
+                  <a
+                    href={withBase(item.href)}
+                    class:list={[
+                      "mobile-menu__link group flex cursor-pointer items-center border-b border-border py-3 leading-[1.1] no-underline transition-colors duration-fast ease-standard",
+                      isActive ? "text-primary" : "text-foreground hover:text-primary focus-visible:text-primary",
+                    ]}
+                    aria-current={isActive ? "page" : undefined}
+                    data-mobile-menu-link
+                  >
+                    <span class="transition-colors duration-fast ease-standard group-hover:text-primary group-focus-visible:text-primary">
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div class="flex flex-col gap-4">
+        <a
+          href={withBase("/kontakt/#poptavka")}
+          class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-action px-6 py-3.5 text-base font-semibold text-on-action no-underline shadow-lifted transition-colors duration-fast ease-standard hover:bg-action-hover focus-visible:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          data-mobile-menu-link
+        >
+          Kontaktujte nás
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+
+        <div class="flex justify-center border-t border-border pt-4">
+          <SocialLinks variant="card" align="center" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Stagger delay via --i — Tailwind can't compose
+     calc() with a runtime CSS var in transition-delay. */
+  .mobile-menu__item {
+    transition-delay: calc(var(--i, 0) * 60ms + 120ms);
+  }
+
+  /* Hamburger bar transforms — :nth-child + compound transforms
+     are easier as scoped CSS than Tailwind variants. */
+  .mobile-menu__bar {
+    transition:
+      transform var(--duration-standard) var(--ease-out-soft),
+      opacity var(--duration-fast) var(--ease-standard),
+      top var(--duration-standard) var(--ease-out-soft),
+      bottom var(--duration-standard) var(--ease-out-soft);
+  }
+  [data-state="open"] .mobile-menu__bar:nth-child(1) {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+  [data-state="open"] .mobile-menu__bar:nth-child(2) {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+  [data-state="open"] .mobile-menu__bar:nth-child(3) {
+    bottom: 50%;
+    transform: translateY(50%) rotate(-45deg);
+  }
+
+  /* Backdrop tint uses color-mix() which Tailwind v4 utilities
+     don't expose cleanly with ink-deep + alpha. */
+  .mobile-menu__backdrop {
+    background: color-mix(in oklch, var(--color-ink-deep) 70%, transparent);
+  }
+
+  /* Fluid type for nav links — clamp() with vw isn't expressible
+     in a single Tailwind utility. */
+  .mobile-menu__link {
+    font-size: clamp(1.375rem, 5.5vw, 2.25rem);
+  }
+</style>
+
+<script>
+  const init = () => {
+    const root = document.querySelector<HTMLElement>("[data-mobile-menu]");
+    if (!root || (root as any).__mobileMenuInit) return;
+    (root as any).__mobileMenuInit = true;
+
+    const toggle = root.querySelector<HTMLButtonElement>(
+      "[data-mobile-menu-toggle]",
+    );
+    const panel = root.querySelector<HTMLElement>("#mobile-menu-panel");
+    const backdrop = root.querySelector<HTMLElement>(".mobile-menu__backdrop");
+    const links = root.querySelectorAll<HTMLAnchorElement>(
+      "[data-mobile-menu-link]",
+    );
+    const label = root.querySelector<HTMLElement>("[data-mobile-menu-label]");
+
+    if (!toggle || !panel) return;
+
+    const setState = (open: boolean) => {
+      root.dataset.state = open ? "open" : "closed";
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute(
+        "aria-label",
+        open ? "Zavřít navigaci" : "Otevřít navigaci",
+      );
+      if (label) {
+        label.textContent = open ? "Zavřít navigaci" : "Otevřít navigaci";
+      }
+      // Content behind the open menu is inert, so Tab stays in header + menu.
+      document
+        .querySelectorAll<HTMLElement>("body > :is(main, footer), main, footer")
+        .forEach((el) => el.toggleAttribute("inert", open));
+      if (open) {
+        panel.removeAttribute("inert");
+        document.body.setAttribute("data-scroll-lock", "");
+        panel.querySelector<HTMLElement>("[data-mobile-menu-link]")?.focus({ preventScroll: true });
+      } else {
+        panel.setAttribute("inert", "");
+        document.body.removeAttribute("data-scroll-lock");
+      }
+    };
+
+    toggle.addEventListener("click", () => {
+      setState(root.dataset.state !== "open");
+    });
+
+    backdrop?.addEventListener("click", () => setState(false));
+
+    links.forEach((link) => {
+      link.addEventListener("click", () => setState(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && root.dataset.state === "open") {
+        setState(false);
+        toggle.focus({ preventScroll: true });
+      }
+    });
+
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const handleResize = () => {
+      if (mq.matches && root.dataset.state === "open") setState(false);
+    };
+    mq.addEventListener("change", handleResize);
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
+  document.addEventListener("astro:page-load", init);
+</script>

@@ -1,0 +1,65 @@
+---
+import { tv } from "tailwind-variants";
+
+export interface Props {
+  /**
+   * Element type: "a" for links, "button" for buttons, "div" for decorative usage.
+   */
+  as?: "a" | "button" | "div";
+  href?: string;
+  /**
+   * Title attribute for hover tooltip / accessibility.
+   */
+  title?: string;
+  rel?: string;
+  /**
+   * Size variant for the icon button.
+   */
+  size?: "sm" | "md" | "lg";
+  /**
+   * Optional utility classes for custom sizing/styling.
+   */
+  class?: string;
+}
+
+const {
+  as = "button",
+  href,
+  title,
+  rel = "nofollow",
+  size = "md",
+  class: extraClass,
+} = Astro.props;
+
+const iconButton = tv({
+  base: "inline-flex items-center justify-center rounded-full bg-transparent text-foreground/60 hover:text-foreground/90 hover:bg-foreground/10 hover:backdrop-blur-md transition-all duration-300",
+  variants: {
+    size: {
+      sm: "p-2",
+      md: "p-3 md:p-4",
+      lg: "p-4 md:p-5",
+    },
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
+const classes = iconButton({ size, class: extraClass });
+---
+
+{
+  as === "a" && href ? (
+    <a href={href} title={title} rel={rel} class={classes}>
+      <slot />
+    </a>
+  ) : as === "div" ? (
+    <div title={title} class={classes}>
+      <slot />
+    </div>
+  ) : (
+    <button type="button" title={title} class={classes}>
+      <slot />
+    </button>
+  )
+}

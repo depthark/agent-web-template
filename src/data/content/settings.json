@@ -1,0 +1,50 @@
+{
+  "name": "Název firmy",
+  "tagline": "Krátký podtitul značky",
+  "description": "Jedna až dvě věty o tom, co firma dělá, pro koho a kde. Použije se jako výchozí popis pro Google a sdílení.",
+  "language": "cs",
+  "keywords": [
+    "hlavní služba město",
+    "druhá služba",
+    "Název firmy"
+  ],
+  "social": {
+    "facebook": "",
+    "instagram": ""
+  },
+  "company": {
+    "legalName": "Název firmy s.r.o.",
+    "ico": "00000000",
+    "street": "Ulice 1",
+    "postalCode": "000 00",
+    "city": "Město",
+    "region": "Kraj",
+    "country": "CZ",
+    "areaServed": "Město a okolí",
+    "geo": {
+      "latitude": 50.0755,
+      "longitude": 14.4378
+    },
+    "openingHours": [
+      {
+        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "17:00"
+      }
+    ],
+    "openingNote": "Schůzky po předchozí domluvě.",
+    "contacts": [
+      {
+        "name": "Jméno Příjmení",
+        "role": "Kontaktní osoba",
+        "phone": "+420 000 000 000",
+        "email": "info@example.cz"
+      }
+    ],
+    "mapEmbed": ""
+  },
+  "analytics": {
+    "gtmId": ""
+  },
+  "googleSiteVerification": ""
+}
