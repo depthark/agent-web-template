@@ -5,12 +5,12 @@
  * short staggered rise (motion-safe only) and a scroll cue leads into the
  * first section (`#obsah`).
  */
+import Icon from "@/components/ui/Icon.astro";
 import { site } from "@/data/site";
 import { hero } from "@/lib/images";
 import { withBase } from "@/lib/navigation";
 import Button from "./ui/Button.astro";
 import ResponsiveImage from "./ui/ResponsiveImage.astro";
-import ChevronDownIcon from "./icons/ChevronDownIcon.astro";
 
 const hero_ = site.home.hero;
 ---
@@ -104,7 +104,7 @@ const hero_ = site.home.hero;
       class="hero__cue absolute bottom-6 left-1/2 inline-flex min-h-11 min-w-11 -translate-x-1/2 flex-col items-center justify-center gap-1 rounded-full text-[0.7rem] uppercase tracking-eyebrow text-white/70 no-underline transition-colors duration-fast hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
     >
       <span>Více<span class="sr-only"> – přejít na obsah</span></span>
-      <span aria-hidden="true"><ChevronDownIcon class="h-5 w-5" /></span>
+      <span aria-hidden="true"><Icon name="chevron-down" class="h-5 w-5" /></span>
     </a>
   </div>
 </section>

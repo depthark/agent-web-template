@@ -1,4 +1,5 @@
 ---
+import Icon from "@/components/ui/Icon.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
@@ -6,8 +7,6 @@ import HeroSection from "@/components/HeroSection.astro";
 import SectionIntro from "@/components/SectionIntro.astro";
 import FaqSection from "@/components/FaqSection.astro";
 import Button from "@/components/ui/Button.astro";
-import ArrowRightIcon from "@/components/icons/ArrowRightIcon.astro";
-import SparklesIcon from "@/components/icons/SparklesIcon.astro";
 import { site } from "@/data/site";
 import { heroPreload } from "@/lib/images";
 import { faqPage } from "@/lib/structured-data";
@@ -41,7 +40,7 @@ const { seo, hero, features, faq, cta } = site.home;
           features.items.map((item, index) => (
             <li class="flex h-full flex-col rounded-xl border border-border bg-surface p-6" data-reveal style={`--reveal-i: ${index}`}>
               <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <SparklesIcon class="h-5 w-5" />
+                <Icon name="sparkles" class="h-5 w-5" />
               </span>
               <h3 class="mt-5 text-xl text-foreground">{item.title}</h3>
               <p class="mt-3 leading-7 text-muted">{item.text}</p>
@@ -67,7 +66,7 @@ const { seo, hero, features, faq, cta } = site.home;
         </div>
         <Button as="a" href={withBase(cta.href)} variant="primary" size="lg" fullWidth rel={undefined} class="lg:w-auto">
           {cta.label}
-          <ArrowRightIcon class="h-5 w-5" />
+          <Icon name="arrow-right" class="h-5 w-5" />
         </Button>
       </div>
     </section>

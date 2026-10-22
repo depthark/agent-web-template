@@ -61,7 +61,8 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 | AI agents | `llms.txt`, `/agent/site.json` | `src/pages/llms.txt.ts`, `src/lib/site-data.ts` |
 | Analytics | Google Tag Manager, only when `settings.json → analytics.gtmId` is set; loaded on idle/first interaction | `BaseLayout.astro` |
 | PWA | Manifest + service worker + offline page | `public/manifest.webmanifest`, `public/sw.js`, `src/pages/offline.astro` |
-| Icons | Favicon/PWA set generated from `public/images/logo.svg` | `bun run icons` |
+| UI icons | [Heroicons](https://heroicons.com) (`heroicons` package, MIT, by Tailwind Labs) inlined at build – `<Icon name="…">`, no JS | `src/components/ui/Icon.astro` |
+| App icons | Favicon/PWA set generated from `public/images/logo.svg` | `bun run icons` |
 | CI | GitHub Actions build check only (Cloudflare deploys) | `.github/workflows/build.yml` |
 
 ## Structure
@@ -95,12 +96,12 @@ All tokens live in `@theme` in `public/styles/tailwind.source.css`; components u
 
 - `BaseLayout.astro` – head (meta, OG, Twitter, canonical, hreflang, JSON-LD), **inlined critical CSS** (`@font-face` + fallback faces + `tailwind.css` + `global.css` in one `<style>`), LCP preload, theme init, deferred GTM, skip link, SW registration.
 - `SiteHeader.astro` – sticky glass header: logo (white art, inverted in light theme), name + tagline, nav, theme toggle, CTA → `/kontakt/#poptavka`.
-- `MobileMenu.astro` – disclosure panel under the real header (header controls at `z-modal + 1`), `inert` on main/footer, scroll lock, focus management, Escape closes. Never duplicate the logo or a close button in the panel.
+- `MobileMenu.astro` – native **Popover API** (`popover` + `popovertarget`): open/close, Escape, tap outside and `aria-expanded` come from the browser; the panel sits in the top layer exactly below the header (`--header-height`, the header has that fixed height), hamburger → X and scroll lock via `:has(:popover-open)`, entrance via `@starting-style`, first link `autofocus`. One inline line closes it when a link is tapped. Never duplicate the logo or a close button in the panel.
 - `HeroSection.astro` – full-bleed image set (LCP, `priority`), ink overlay, logo, eyebrow, title (subtitle only if filled), two CTAs, staggered motion-safe entrance, scroll cue to `#obsah` (keyframes animate only Y – Tailwind centres with `translate`).
 - `SectionIntro.astro` – eyebrow + heading + lead; `level={1}` for the page `<h1>`.
 - `FaqSection.astro` – native `<details name>` accordion; also the FAQPage schema.
 - `ProjectSection.astro` – one project: title, subtitle, Markdown text, gallery (tiles ≤ 800 px with focus crop, Fancybox srcset ≥ 1200 px, 400 px thumbs).
-- `ui/Button.astro` (variants `primary`, `secondary`, `outline`, `outline-on-dark`, `ghost`, `hero-primary`, `hero-outline`; `fullWidth`; min 44 px), `ui/IconButton.astro`, `ui/ResponsiveImage.astro`.
+- `ui/Button.astro` (variants `primary`, `secondary`, `outline`, `outline-on-dark`, `ghost`, `hero-primary`, `hero-outline`; `fullWidth`; min 44 px), `ui/IconButton.astro`, `ui/ResponsiveImage.astro`. `ui/Icon.astro` – Heroicons (`variant`: outline, solid, mini, micro; `label` makes it meaningful, else `aria-hidden`); brand logos (Facebook, Instagram) stay in `src/components/icons/`.
 
 ## Data layer
 
@@ -119,6 +120,7 @@ Content is edited in Decap CMS and stored as JSON; `src/data/site.ts` composes i
 - Copy lives in content JSON (CMS), never hardcoded in templates (UI micro-copy like form labels excepted).
 - Images: `<ResponsiveImage>` with an image-set path, fixed width/height, `max` for small boxes; only the LCP image gets `priority` (+ preload via `heroPreload()`).
 - Cards that are not links get **no hover effect** (no lift, no zoom) – it suggests a click.
+- **As little JavaScript as possible.** Prefer HTML/CSS platform features: `<details>`, Popover API, `<dialog>`, `:has()`, `:user-invalid`, `@starting-style`, scroll-driven animations, native form posts. JS only where the platform can't (persisting the theme, Fancybox, form enhancement), inline and small, loaded late; every feature must work or degrade gracefully without it. Icons are build-time SVG, never an icon font or JS library.
 - All CTAs that ask for an inquiry link to `/kontakt/#poptavka`; nav "Kontakt" goes to the page top.
 - Anchors clear the sticky header through `scroll-padding-block-start` on `html` – no per-element `scroll-margin`.
 - Scroll reveals are CSS-only (`data-reveal`, `animation-timeline: view()`), stagger with `--reveal-i`.
