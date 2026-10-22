@@ -10,7 +10,7 @@ description: Work with photos – the in-repo AVIF image-set pipeline (no image 
 - One photo = an **image set**: `public/gallery/<group>/<name>-<width>.avif` for widths **400, 800, 1200, 1800, 2400**, never upscaled; a standard width is skipped when the original is within 18 % of it (e.g. 1225 px → 400, 800, 1225).
 - Content stores only the **base path** `/gallery/<group>/<name>` (+ optional `focus: { x, y }` in %). `src/lib/image-set.ts` reads the available widths and the intrinsic size (AVIF `ispe` box) at build time.
 - Groups: `web/` (site photos – hero, cards), `projekty/<slug>/` (one folder per project; the folder name = project slug, so slugs never change after creation).
-- Same pipeline twice: **browser** (`public/admin/image-pipeline.js` + `image-worker.js` – Squoosh AVIF encoder via jSquash WASM, Lanczos3 resize, smartcrop focus, module-worker pool) and **Node** (`scripts/image-set.mjs` – sharp + smartcrop-sharp). Same widths, quality and focus logic.
+- Same pipeline twice: **browser** (`public/admin/image-pipeline.js` + `image-worker.js` – Squoosh AVIF encoder via jSquash WASM, Lanczos3 resize, smartcrop focus, module-worker pool) and **Node** (`scripts/image-set.ts` – sharp + smartcrop-sharp). Same widths, quality and focus logic.
 
 ## Rendering
 
@@ -39,7 +39,7 @@ bun run image-set ./photo.jpg /gallery/projekty/<slug>/<slug>-01
 bun run image-set https://old-site.example/img.jpg /gallery/web/hero
 ```
 
-Prints `{ src, width, height, widths, focus }` – put `src` (+ `focus`) into the content JSON. For many files, import `makeImageSet` from `scripts/image-set.mjs` in a small script (download → set → write JSON). Name files `<slug>-01`, `-02`, … in display order.
+Prints `{ src, width, height, widths, focus }` – put `src` (+ `focus`) into the content JSON. For many files, import `makeImageSet` from `scripts/image-set.ts` in a small script (download → set → write JSON). Name files `<slug>-01`, `-02`, … in display order.
 
 ## Template placeholders
 

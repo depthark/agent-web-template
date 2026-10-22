@@ -9,7 +9,7 @@ Single-language sites need none of this (`settings.json → language` drives `<h
 
 ## Choose (check current versions/docs first, e.g. via context7)
 
-- **Routing**: Astro's built-in `i18n` config in `astro.config.mjs` – `locales`, `defaultLocale`, `routing.prefixDefaultLocale: false` (default language keeps today's URLs, others under `/en/…`), `fallback` if a page is not translated yet. Helpers from `astro:i18n` (`getRelativeLocaleUrl`, `getAbsoluteLocaleUrl`).
+- **Routing**: Astro's built-in `i18n` config in `astro.config.ts` – `locales`, `defaultLocale`, `routing.prefixDefaultLocale: false` (default language keeps today's URLs, others under `/en/…`), `fallback` if a page is not translated yet. Helpers from `astro:i18n` (`getRelativeLocaleUrl`, `getAbsoluteLocaleUrl`).
 - **UI strings** (labels, buttons, form errors, aria texts): **Paraglide JS** (`@inlang/paraglide-js`) – compiled, typed, tree-shaken message functions, zero runtime cost for static pages. Messages in `messages/<locale>.json`. Alternative only if the user prefers: `astro-i18next`.
 - **Content**: Decap CMS i18n – in `config.yml` top-level `i18n: { structure: multiple_files, locales: [cs, en], default_locale: cs }`, then `i18n: true` per collection and `i18n: true | duplicate | false` per field (images and slugs usually `duplicate`). Files become `src/data/content/<locale>/…json` (or `…/<name>.<locale>.json` with `multiple_files`); `src/data/site.ts` gets `getSite(locale)`.
 

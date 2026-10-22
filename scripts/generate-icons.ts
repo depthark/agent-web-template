@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Generates the favicon / PWA icon set from the logo – white art
  * (public/images/logo.svg, the same file the header and hero use) on the
@@ -17,14 +17,14 @@ const OUT = "public/images/favicons";
 const LOGO = "public/images/logo.svg";
 const INK = "#1b1d24";
 /** Square around the symbol in the logo's viewBox units, or null for the whole logo. */
-const MARK_VIEWBOX = null;
+const MARK_VIEWBOX: string | null = null;
 
 const source = await readFile(LOGO, "utf8");
 const inner = source.replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "").replace(/<title>.*?<\/title>/, "");
 const fullLogo = /viewBox="([^"]+)"/.exec(source)?.[1] ?? "0 0 1024 1024";
 
 /** Logo art centred on an ink square; `scale` < 1 adds a safe-zone margin. */
-function iconSvg({ viewBox, scale = 1, radius = 0 }) {
+function iconSvg({ viewBox, scale = 1, radius = 0 }: { viewBox: string; scale?: number; radius?: number }) {
   const [x, y, w, h] = viewBox.split(/\s+/).map(Number);
   const size = Math.max(w, h) / scale;
   const ox = x - (size - w) / 2;
@@ -37,10 +37,10 @@ const appIcon = iconSvg({ viewBox: fullLogo, scale: 0.8, radius: 112 });
 const maskable = iconSvg({ viewBox: fullLogo, scale: 0.66 }); // inside the 80 % safe zone
 const apple = iconSvg({ viewBox: fullLogo, scale: 0.76 });
 
-const png = (svg, size) => sharp(Buffer.from(svg), { density: 300 }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
+const png = (svg: string, size: number) => sharp(Buffer.from(svg), { density: 300 }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
 
 /** .ico with embedded PNGs (supported by every current browser). */
-function ico(images) {
+function ico(images: Array<{ size: number; data: Buffer }>) {
   const header = Buffer.alloc(6 + images.length * 16);
   header.writeUInt16LE(0, 0);
   header.writeUInt16LE(1, 2);
@@ -59,7 +59,7 @@ function ico(images) {
   return Buffer.concat([header, ...images.map((image) => image.data)]);
 }
 
-const files = {
+const files: Record<string, Promise<Buffer>> = {
   "web-app-manifest-512x512.png": png(appIcon, 512),
   "web-app-manifest-192x192.png": png(appIcon, 192),
   "maskable-512x512.png": png(maskable, 512),

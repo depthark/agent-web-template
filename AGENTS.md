@@ -44,14 +44,14 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 
 | Area | Library / service | Where |
 | --- | --- | --- |
-| Framework | Astro (static output, `trailingSlash: "always"`, `inlineStylesheets: "always"`) | `astro.config.mjs`, `src/` |
-| Runtime / package manager | Bun (`packageManager` in `package.json`) | `bun install`, `bun run …` |
-| Tooling runtime | Node.js LTS | `.node-version`, `engines`, CI |
+| Framework | Astro (static output, `trailingSlash: "always"`, `inlineStylesheets: "always"`) | `astro.config.ts`, `src/` |
+| Runtime / package manager | Bun (`packageManager` in `package.json`) – also runs the TypeScript scripts in `scripts/` directly | `bun install`, `bun run …`, `bun scripts/<name>.ts` |
+| Node.js | LTS, for tools that require it (Astro CLI, CI setup) | `.node-version`, `engines`, CI |
 | Language | TypeScript 7 (`typescript-7`, native `tsc`) for `.ts`; TypeScript 6 kept only for `@astrojs/check` until its API supports 7 | `bun run typecheck` |
 | Styling | Tailwind CSS v4 via `@tailwindcss/cli` | `public/styles/tailwind.source.css` → `tailwind.css` (generated, committed) |
 | Variants | `tailwind-variants` + `tailwind-merge` | `src/components/ui/Button.astro` |
 | Lightbox | Fancybox `@fancyapps/ui` | `src/pages/projekty.astro` |
-| Images | AVIF image sets, widths 400/800/1200/1800/2400, never upscaled; tiles ≤ 800 px, lightbox ≥ 1200 px, `sizes="auto"` for lazy images, focus point → `object-position` | `src/lib/image-set.ts`, `src/components/ui/ResponsiveImage.astro`, `scripts/image-set.mjs`, `public/admin/image-*.js` |
+| Images | AVIF image sets, widths 400/800/1200/1800/2400, never upscaled; tiles ≤ 800 px, lightbox ≥ 1200 px, `sizes="auto"` for lazy images, focus point → `object-position` | `src/lib/image-set.ts`, `src/components/ui/ResponsiveImage.astro`, `scripts/image-set.ts`, `public/admin/image-*.js` |
 | CMS | Decap CMS (unpkg) + `decap-server` locally; driver.js tours | `public/admin/` |
 | CMS auth | GitHub OAuth app via Pages Functions | `functions/api/auth.ts`, `callback.ts` |
 | Contact form | Resend via `/api/inquiry` (JSON from script, 303 redirect without JS, honeypot + time + link checks, confirmation e-mail) | `functions/api/inquiry.ts`, `src/pages/kontakt.astro` |
@@ -73,7 +73,7 @@ public/gallery/       image sets: web/ (site photos), projekty/<slug>/ (project 
 public/fonts/         self-hosted woff2 (Latin + Czech/Slovak subsets) + licences
 public/images/        logo.svg (white art), favicons/ (generated)
 public/styles/        tailwind.source.css (tokens), global.css, tailwind.css (generated)
-scripts/              image-set.mjs, generate-icons.mjs, placeholders.mjs
+scripts/              image-set.ts, generate-icons.ts, placeholders.ts
 src/data/             site.ts + content/ (settings, home, projects page, contact, projects/<slug>.json)
 src/lib/              image-set, gallery, images (hero preload), markdown, navigation, og-image, structured-data, site-data
 src/components/       SiteHeader, MobileMenu, SiteFooter, HeroSection, SectionIntro, FaqSection, ProjectSection, ThemeToggle, SocialLinks, ui/, icons/
@@ -125,6 +125,7 @@ Content is edited in Decap CMS and stored as JSON; `src/data/site.ts` composes i
 - Component `<style>` only for what Tailwind can't express (layered gradients with `color-mix()`, keyframes, compound selectors).
 - Never use the `hidden` attribute for something CSS must show later: Tailwind preflight hides `[hidden]` with a layered `!important` no unlayered rule beats.
 - Agents (llms.txt, site.json) are read-only; nothing may submit the form for a visitor.
+- **TypeScript everywhere** (`.ts`, `astro.config.ts`, `scripts/*.ts` run by Bun – no build step, no `.mjs`). Only type syntax a runtime can strip (`erasableSyntaxOnly`: no `enum`/`namespace`). Plain JavaScript only in `public/` (served to the browser as-is: `public/admin/*.js`, `public/sw.js`).
 - After editing `public/admin/*.js`, bump `?v=` in `public/admin/index.html`.
 - Commit messages: Conventional Commits in English. Client-facing text: the client's language (Czech by default).
 

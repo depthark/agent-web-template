@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Placeholder photos for the template (abstract gradients) as real image
  * sets, so the site builds and shows the gallery before the client's photos
@@ -6,9 +6,9 @@
  * the placeholder files from public/gallery/.
  */
 import sharp from "sharp";
-import { makeImageSet } from "./image-set.mjs";
+import { makeImageSet } from "./image-set.ts";
 
-const SETS = [
+const SETS: Array<[base: string, width: number, height: number, colors: [string, string, string]]> = [
   ["/gallery/web/hero", 2400, 1600, ["#1b1d24", "#3a4596", "#8b93e6"]],
   ["/gallery/projekty/ukazkovy-projekt/ukazkovy-projekt-01", 2400, 1600, ["#2a2f3a", "#5b6ad0", "#d8dcf5"]],
   ["/gallery/projekty/ukazkovy-projekt/ukazkovy-projekt-02", 1600, 2000, ["#20242c", "#3f8f7a", "#cfe9e1"]],

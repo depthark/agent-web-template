@@ -24,7 +24,7 @@ description: Check and improve technical SEO – titles and descriptions, canoni
 - Titles ≤ 60 chars, descriptions 120–160, unique per page, in the site language, with the main service + place.
 - Exactly one `<h1>` per page; headings describe content.
 - Every page in `site.nav` is in the sitemap; new pages added to `ogPages()`.
-- `PUBLIC_SITE_URL` / `astro.config.mjs → site` = the canonical production origin (with `www` if that is the main host) – canonical, sitemap and OG URLs all derive from it.
+- `PUBLIC_SITE_URL` / `astro.config.ts → site` = the canonical production origin (with `www` if that is the main host) – canonical, sitemap and OG URLs all derive from it.
 - One host only: apex → `www` (or the reverse) with a 301 (see `cloudflare-deploy`); `http` → `https`.
 - Trailing slashes consistent (`trailingSlash: "always"`).
 - Images: descriptive alt texts (they also go into the sitemap as titles and into ImageGallery captions).

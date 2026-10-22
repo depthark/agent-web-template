@@ -10,7 +10,7 @@ description: Replace an existing website (Webnode, WordPress, Wix, static host�
 - **Pages and URLs**: crawl the old site (sitemap.xml, navigation, `curl` + link extraction). Every indexed URL must exist on the new site or get a 301. Default: keep the exact same paths (and trailing-slash style).
 - **Content**: texts per page, FAQ, prices, contacts, legal info (company, IČO), opening hours, map, social links.
 - **SEO assets**: `<title>`, meta description, meta keywords, Search Console verification meta (`google-site-verification` – copy into `settings.json → googleSiteVerification`, the property stays verified), Analytics/GTM container ID, structured data.
-- **Photos**: download originals (largest size the old CDN serves), keep project grouping and order; import with `scripts/image-set.mjs` (`image-pipeline` skill). Write alt texts.
+- **Photos**: download originals (largest size the old CDN serves), keep project grouping and order; import with `scripts/image-set.ts` (`image-pipeline` skill). Write alt texts.
 - **E-mail**: who hosts the mailboxes (MX). They stay where they are.
 - **DNS snapshot**: registrar, nameservers / NSSET, KEYSET/DNSSEC, every record (`dig` against the authoritative NS) → `docs/ROLLBACK.md` with exact steps to go back.
 - **Baseline**: Lighthouse (mobile + desktop) of the old site's main pages, same day, same machine – for the before/after comparison.

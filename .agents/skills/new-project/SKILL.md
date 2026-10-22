@@ -15,7 +15,7 @@ Run the `update-dependencies` skill. Do not start on outdated packages.
 
 - `package.json` → `name`, `description`.
 - `wrangler.toml` → `name` (Cloudflare Pages project, e.g. `client-cz`).
-- `astro.config.mjs` and `.env.example` → `https://www.<domain>`.
+- `astro.config.ts` and `.env.example` → `https://www.<domain>`.
 - `public/robots.txt` → `Sitemap:` URL.
 - `public/admin/config.yml` → `backend.repo` (`owner/repo`), `base_url`, `site_url`, `display_url`.
 - `public/manifest.webmanifest` → `name`, `short_name`, `description`, colours, `shortcuts`.
@@ -27,7 +27,7 @@ Run the `update-dependencies` skill. Do not start on outdated packages.
 
 - Tokens in `public/styles/tailwind.source.css` (`@theme` + `[data-theme="dark"]`): `primary`, `accent`, surfaces, ink, footer. Check contrast (text ≥ 4.5:1) for `primary` on `background`/`surface` and `accent` on `footer-bg` / `ink` – the `accessibility-audit` skill has the method.
 - Logo: client artwork as **white** SVG at `public/images/logo.svg`, tight `viewBox`, no artboard clip; never redraw a client logo. Header inverts it in light theme. Optimise with SVGO.
-- `scripts/generate-icons.mjs` → `INK`, and `MARK_VIEWBOX` if the logo has a wordmark; run `bun run icons`.
+- `scripts/generate-icons.ts` → `INK`, and `MARK_VIEWBOX` if the logo has a wordmark; run `bun run icons`.
 - `src/lib/og-image.ts` → `GLOW`, font (TTF in `src/assets/fonts/`).
 - Fonts: if the brand needs other faces, follow the fonts section of `performance-audit` (self-hosted, subset, fallback metrics). Keep at most 2–3 families, weights 400–600.
 
@@ -36,7 +36,7 @@ Run the `update-dependencies` skill. Do not start on outdated packages.
 - Fill content JSON (or let the client do it in the CMS later). Copy rules: short, customer-outcome focused, the client's language.
 - Pages: keep `/`, `/projekty/`, `/kontakt/`; add others the same way (content JSON → CMS file entry → page in `src/pages/` → `site.nav` → `ogPages()` → sitemap images). If the site **replaces an existing one**, run `site-migration` first – URLs must not change.
 - Multiple languages → `i18n` skill before building pages.
-- Photos: delete the placeholders (`public/gallery/web/hero-*`, `public/gallery/projekty/ukazkovy-projekt/`, `src/data/content/projects/ukazkovy-projekt.json`), import real ones (`image-pipeline` skill). Remove `scripts/placeholders.mjs` + its script entry when no longer needed.
+- Photos: delete the placeholders (`public/gallery/web/hero-*`, `public/gallery/projekty/ukazkovy-projekt/`, `src/data/content/projects/ukazkovy-projekt.json`), import real ones (`image-pipeline` skill). Remove `scripts/placeholders.ts` + its script entry when no longer needed.
 
 ## 4. Repository
 
