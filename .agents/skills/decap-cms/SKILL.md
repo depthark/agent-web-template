@@ -51,6 +51,7 @@ description: Set up and extend the Decap CMS admin (/admin/) – config.yml coll
 ## Troubleshooting
 
 - "Not Found" on login → OAuth secrets missing or not Secret type, or wrong callback URL.
+- "The code passed is incorrect or expired" → `/api/callback` ran twice (service-worker navigation preload sends a parallel request). `functions/api/_middleware.ts` answers preload requests with 204 – keep it; any function reached by a navigation must not do one-time work on a preload request.
 - Uploads fail with 404/403 → editor lacks write access, or `backend.repo` wrong.
 - Changes not visible → the PR is still a draft (Schvalování tab), or the deploy is running (`/build.json`).
 - Admin JS changes not visible → bump `?v=` in `index.html`.

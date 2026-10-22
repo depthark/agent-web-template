@@ -53,7 +53,7 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 | Lightbox | Fancybox `@fancyapps/ui` | `src/pages/projekty.astro` |
 | Images | AVIF image sets, widths 400/800/1200/1800/2400, never upscaled; tiles ≤ 800 px, lightbox ≥ 1200 px, `sizes="auto"` for lazy images, focus point → `object-position` | `src/lib/image-set.ts`, `src/components/ui/ResponsiveImage.astro`, `scripts/image-set.ts`, `public/admin/image-*.js` |
 | CMS | Decap CMS (unpkg) + `decap-server` locally; driver.js tours | `public/admin/` |
-| CMS auth | GitHub OAuth app via Pages Functions | `functions/api/auth.ts`, `callback.ts` |
+| CMS auth | GitHub OAuth app via Pages Functions; `_middleware.ts` ignores service-worker navigation-preload requests (else the one-time OAuth code is exchanged twice) | `functions/api/auth.ts`, `callback.ts`, `_middleware.ts` |
 | Contact form | Resend via `/api/inquiry` (JSON from script, 303 redirect without JS, honeypot + time + link checks, confirmation e-mail) | `functions/api/inquiry.ts`, `src/pages/kontakt.astro` |
 | Content | JSON in git, composed by `src/data/site.ts` | `src/data/content/**/*.json` |
 | Rich text | `marked` (project descriptions from the CMS) | `src/lib/markdown.ts` |
