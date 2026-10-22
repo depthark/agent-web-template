@@ -6,7 +6,7 @@
  * Colors:  OKLCH only (check contrast: text ≥ 4.5:1, large text ≥ 3:1).
  * Spacing: rem-based (Tailwind v4 derives p-1, p-2, … from --spacing).
  * Naming:  semantic over decorative. Re-brand a new site here, not in
- *          components (see .claude/skills/new-project/SKILL.md).
+ *          components (see .agents/skills/new-project/SKILL.md).
  * ============================================================ */
 
 @theme {

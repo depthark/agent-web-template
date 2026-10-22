@@ -13,7 +13,7 @@ Never start building pages on outdated dependencies.
 
 ## Skills
 
-Project skills live in `.claude/skills/<name>/SKILL.md` (Claude Code loads them automatically; other agents: read the file when the task matches).
+Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a skill's description (front matter), read that `SKILL.md` first and follow it.
 
 | Skill | Use when |
 | --- | --- |

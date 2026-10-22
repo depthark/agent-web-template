@@ -12,7 +12,7 @@ Starter for small business and portfolio websites, built to be driven by an AI c
 
 ## For agents
 
-Start with [`AGENTS.md`](AGENTS.md). Skills for every recurring task are in [`.claude/skills/`](.claude/skills) – a new project begins with `update-dependencies`, then `new-project`.
+Start with [`AGENTS.md`](AGENTS.md). Skills for every recurring task are in [`.agents/skills/`](.agents/skills) – a new project begins with `update-dependencies`, then `new-project`.
 
 ## Quick start
 
