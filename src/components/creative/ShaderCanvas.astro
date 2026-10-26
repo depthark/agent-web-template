@@ -1,0 +1,103 @@
+---
+/**
+ * Full-bleed shader backdrop for a section (see the `creative-dev` skill).
+ * Purely decorative: content goes in the parent, never "in" the canvas. The
+ * CSS fallback (gradient from the same colours, or `fallback` slot) is the
+ * designed state for no WebGL, reduced data, forced colours and print; the
+ * canvas fades in over it after its first frame.
+ *
+ *   <section class="relative isolate">
+ *     <ShaderCanvas fragment={field} colors={["var(--color-ink-deep)", …]} />
+ *     …content…
+ *   </section>
+ */
+import { field } from "@/lib/shaders/field";
+
+export interface Props {
+  /** Fragment shader body (GLSL ES 3.00, must define main()). */
+  fragment?: string;
+  /** Four CSS colours → u_color[0..3]. Tokens (var(--color-…)) preferred. */
+  colors?: [string, string, string, string];
+  /** Device-pixel-ratio cap; full-screen fragment cost grows with its square. */
+  dpr?: number;
+  /** Frame cap. Ambient backdrops rarely need more than 30. */
+  fps?: number;
+  class?: string;
+}
+
+const {
+  fragment = field,
+  colors = [
+    "var(--color-ink-deep)",
+    "var(--color-ink)",
+    "var(--color-primary)",
+    "var(--color-accent)",
+  ],
+  dpr = 1.5,
+  fps = 30,
+  class: className = "",
+} = Astro.props;
+
+const style = colors.map((c, i) => `--shader-color-${i}: ${c}`).join("; ");
+---
+
+<div
+  class:list={["shader-stage", className]}
+  style={style}
+  data-shader-stage
+  data-dpr={dpr}
+  data-fps={fps}
+  aria-hidden="true"
+>
+  <slot name="fallback">
+    <div class="shader-stage__fallback"></div>
+  </slot>
+  <canvas class="shader-stage__canvas" aria-hidden="true"></canvas>
+  <script type="x-shader/x-fragment" set:html={fragment} />
+</div>
+
+<script>
+  import "@/scripts/shader-stage";
+</script>
+
+<style>
+  /* Plain CSS, not utilities: an unused component adds nothing to the
+     inlined tailwind.css every page carries. */
+  .shader-stage {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .shader-stage__fallback,
+  .shader-stage__canvas {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .shader-stage__fallback {
+    background:
+      radial-gradient(60% 80% at 30% 20%, color-mix(in oklch, var(--shader-color-2) 45%, transparent), transparent 70%),
+      radial-gradient(50% 60% at 80% 90%, color-mix(in oklch, var(--shader-color-3) 30%, transparent), transparent 70%),
+      linear-gradient(160deg, var(--shader-color-0), var(--shader-color-1));
+  }
+
+  .shader-stage__canvas {
+    opacity: 0;
+    transition: opacity 600ms var(--ease-out-soft);
+  }
+
+  [data-ready] > .shader-stage__canvas {
+    opacity: 1;
+  }
+
+  @media (forced-colors: active), print, (prefers-reduced-data: reduce) {
+    .shader-stage__canvas {
+      display: none;
+    }
+  }
+</style>

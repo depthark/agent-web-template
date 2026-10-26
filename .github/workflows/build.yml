@@ -1,7 +1,9 @@
 name: Build check
 
 # The site is hosted on Cloudflare Pages (deploys on push to main). This
-# workflow only checks that the site builds; it no longer publishes anywhere.
+# workflow only checks that the site builds and passes the static quality gate
+# (scripts/creative-check.ts); it does not publish anywhere. The browser audit
+# (bun run audit) runs locally before launch – see the creative-review skill.
 
 on:
   push:
@@ -42,5 +44,5 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build site
-        run: bun run build
+      - name: Build and check (types, budgets, accessibility rules)
+        run: bun run verify

@@ -21,6 +21,7 @@
     "astro": "^7.4.0",
     "decap-server": "^3.11.5",
     "npm-run-all": "^4.1.5",
+    "playwright-core": "^1.64.1",
     "sharp": "^0.35.5",
     "smartcrop-sharp": "2.0.8",
     "tailwindcss": "^4.3.3",
@@ -40,6 +41,9 @@
     "cms:local": "decap-server",
     "image-set": "bun scripts/image-set.ts",
     "typecheck": "astro check && node node_modules/typescript-7/bin/tsc --noEmit",
+    "creative:check": "bun scripts/creative-check.ts",
+    "verify": "bun run build && bun run creative:check",
+    "audit": "bun scripts/audit.ts",
     "placeholders": "bun scripts/placeholders.ts"
   },
   "engines": {

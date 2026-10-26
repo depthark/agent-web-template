@@ -1,4 +1,8 @@
 @import "tailwindcss";
+/* Docs and agent skills are full of example class names – not site code. */
+@source not "../../.agents";
+@source not "../../.claude";
+@source not "../../docs";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* ============================================================
