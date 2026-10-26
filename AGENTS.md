@@ -1,6 +1,6 @@
 # AGENTS
 
-Template for small business / portfolio websites: **Astro (static) + TypeScript 7 + Bun + Tailwind v4 + Decap CMS + Fancybox**, hosted on **Cloudflare Pages**, contact form e-mails through **Resend**, photos as **AVIF image sets in the repo** (compressed in the CMS, no image CDN). Out of the box it scores Lighthouse 100/100/100/100 on mobile and desktop – keep it that way.
+Template for small business / portfolio websites: **Astro (static) + TypeScript 7 + Bun + Tailwind v4 + Decap CMS + Fancybox**, hosted on **Cloudflare Pages**, contact form e-mails through **Resend**, photos as **AVIF image sets in the repo** (compressed in the CMS, no image CDN). Out of the box it scores Lighthouse 100/100/100/100 on mobile and desktop – keep it that way. For original, award-level sites it has a **creative workflow** (skills `creative-*`, agents `creative-director` / `creative-jury`, gates `bun run verify` + `bun run audit`) that keeps those scores.
 
 ## First thing in a new project
 
@@ -11,9 +11,11 @@ When this template is used for a new site (fresh clone, `Název firmy` / `exampl
 
 Never start building pages on outdated dependencies.
 
+When the user wants a **creative / original / award-level** site (or names reference sites), hand it to the **`creative-director`** agent or follow the **`creative-site`** skill yourself – after the two steps above.
+
 ## Skills
 
-Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a skill's description (front matter), read that `SKILL.md` first and follow it.
+Project skills live in `.agents/skills/<name>/SKILL.md` (`.claude/skills` is a symlink, so Claude Code also offers them as `/name`). When a task matches a skill's description (front matter), read that `SKILL.md` first and follow it.
 
 | Skill | Use when |
 | --- | --- |
@@ -29,6 +31,21 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 | `site-migration` | Replacing an existing site (Webnode, WordPress, …): URLs, SEO, photos, e-mail, DNS |
 | `i18n` | The site needs more than one language |
 | `client-handoff` | Client guide (PDF), inviting editors, final checks |
+| `creative-site` | Original, award-level site or page – the end-to-end workflow with gates (runs the four below) |
+| `creative-direction` | Research, reference teardowns, award landscape, art sources, concepts, originality tests, art-direction brief |
+| `creative-ux` | Narrative, choreography, motion language, signature interaction spec, accessibility of expressive UI |
+| `creative-dev` | Effect ladder (CSS → `<ShaderCanvas>` → lazy 3D), view transitions, scroll-driven motion, WebGL rules |
+| `creative-review` | Gates (`verify`, `audit`), jury scoring, originality re-check – before any creative work is done |
+| `css-first` | Any CSS question: modern CSS before JS, Baseline status, 74 demos (vendored from luko248/css-first-skill) |
+
+## Agents
+
+Custom agents live in `.agents/agents/<name>.md` (`.claude/agents` is a symlink for Claude Code).
+
+| Agent | Role |
+| --- | --- |
+| `creative-director` | Runs `creative-site` end to end: research → concept → experience → spike → build → review loop. Writes decisions to `docs/creative/`. |
+| `creative-jury` | Independent critic (read-only): gates, screenshots, originality tests, awards-style scores and ranked findings. Never grades its own work. |
 
 ## Fixed decisions (do not replace without the user asking)
 
@@ -39,6 +56,7 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 - **Lightbox: Fancybox** (`@fancyapps/ui`), CSS loaded on demand.
 - **Multilingual sites: an i18n library** (see the `i18n` skill), never hand-rolled string maps.
 - Fonts self-hosted, critical CSS inlined, no render-blocking third parties.
+- **Creative effects: CSS-first effect ladder** – native scroll (no Lenis/Locomotive), no preloaders, WebGL through `<ShaderCanvas>` or a lazily imported 3D island; enforced by `bun run creative:check` and `bun run audit`.
 
 ## Tech stack
 
@@ -63,7 +81,9 @@ Project skills live in `.agents/skills/<name>/SKILL.md`. When a task matches a s
 | PWA | Manifest + service worker + offline page | `public/manifest.webmanifest`, `public/sw.js`, `src/pages/offline.astro` |
 | UI icons | [Heroicons](https://heroicons.com) (`heroicons` package, MIT, by Tailwind Labs) inlined at build – `<Icon name="…">`, no JS | `src/components/ui/Icon.astro` |
 | App icons | Favicon/PWA set generated from `public/images/logo.svg` | `bun run icons` |
-| CI | GitHub Actions build check only (Cloudflare deploys) | `.github/workflows/build.yml` |
+| Creative effects | `<ShaderCanvas>` – WebGL2 fragment-shader backdrop (~1.9 kB gz, lazy, paused off-screen, still frame on reduced motion, CSS fallback); shaders as GLSL strings | `src/components/creative/`, `src/scripts/shader-stage.ts`, `src/lib/shaders/` |
+| Quality gates | `creative-check` (source rules, per-page budgets, markup) and `audit` (Playwright + Chrome: console, reduced motion, reflow, keyboard focus, target size, screenshots; Lighthouse 13 mobile/desktop) | `scripts/creative-check.ts`, `scripts/audit.ts` |
+| CI | GitHub Actions: `bun run verify` (build + creative-check); Cloudflare deploys | `.github/workflows/build.yml` |
 
 ## Structure
 
@@ -74,10 +94,13 @@ public/gallery/       image sets: web/ (site photos), projekty/<slug>/ (project 
 public/fonts/         self-hosted woff2 (Latin + Czech/Slovak subsets) + licences
 public/images/        logo.svg (white art), favicons/ (generated)
 public/styles/        tailwind.source.css (tokens), global.css, tailwind.css (generated)
-scripts/              image-set.ts, generate-icons.ts, placeholders.ts
+scripts/              image-set.ts, generate-icons.ts, placeholders.ts, creative-check.ts, audit.ts
 src/data/             site.ts + content/ (settings, home, projects page, contact, projects/<slug>.json)
 src/lib/              image-set, gallery, images (hero preload), markdown, navigation, og-image, structured-data, site-data
-src/components/       SiteHeader, MobileMenu, SiteFooter, HeroSection, SectionIntro, FaqSection, ProjectSection, ThemeToggle, SocialLinks, ui/, icons/
+src/components/       SiteHeader, MobileMenu, SiteFooter, HeroSection, SectionIntro, FaqSection, ProjectSection, ThemeToggle, SocialLinks, ui/, icons/, creative/ (ShaderCanvas)
+src/scripts/          client scripts imported by components (shader-stage.ts)
+src/lib/shaders/      fragment shaders as exported GLSL strings (field.ts = starting point)
+docs/creative/        per project: research, brief, experience, review (creative workflow)
 src/pages/            index, projekty, kontakt, 404, offline, sitemap.xml, llms.txt, build.json, og/[slug].jpg, agent/site.json
 ```
 
@@ -141,13 +164,15 @@ Content is edited in Decap CMS and stored as JSON; `src/data/site.ts` composes i
 
 ## Performance budget
 
-Lighthouse 100 in all four categories on every page, mobile and desktop; LCP < 2 s (mobile, simulated), TBT 0 ms, CLS ≤ 0.01. Details and the fixes that got there: `performance-audit` skill.
+Lighthouse 100 in every category on every page (Lighthouse 13 adds *agentic browsing* – also 100), mobile and desktop; LCP < 2 s (mobile, simulated), TBT 0 ms, CLS ≤ 0.01. Per page (gzip): HTML with inlined CSS ≤ 50 kB, initial JS ≤ 50 kB, lazily imported JS ≤ 300 kB (`scripts/creative-check.ts`). Details and the fixes that got there: `performance-audit` skill; `bun run audit` checks it all locally.
 
 ## Build & dev
 
 - `bun run dev` – Tailwind watcher + Astro dev server (http://localhost:4321)
 - `bun run cms:local` – local Decap backend; edit at `http://localhost:4321/admin/` (writes files directly)
 - `bun run build` – minify CSS → `astro check` → TypeScript 7 `tsc --noEmit` → `astro build`
+- `bun run verify` – build + `creative:check` (source rules, budgets, markup) – what CI runs
+- `bun run audit` – builds for localhost, serves `dist/`, runs browser checks + Lighthouse on every sitemap page → `.audit/report.md`, `.audit/shots/` (needs Chrome or `CHROME_PATH`; `--url https://… --no-build` for a deployed site)
 - `bun run preview` – serve `dist/`
 - `bun run image-set <file-or-url> /gallery/<group>/<name>` – make an image set, prints `{ src, focus, … }`
 - `bun run icons` – favicon/PWA icons from `public/images/logo.svg`
