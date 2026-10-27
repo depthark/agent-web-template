@@ -54,6 +54,8 @@ Target: **Lighthouse 100 in all categories on every page, mobile and desktop**; 
 | Large image transfer | full-size image in a small box | `max` prop on `ResponsiveImage`, correct `sizes` |
 | Best Practices < 100 | `mailto:` form action, console errors, missing source maps of 3rd parties | real `/api/` endpoint, fix errors |
 | Background image competes with LCP | CSS background set eagerly | `data-near` lazy background |
+| Anchor links land hundreds of px past the target; full-page screenshots mostly blank | `content-visibility: auto` on sections – smooth scroll aims at the `contain-intrinsic-size` placeholders | don't use it on sections that anchors point to (the gain is within TBT noise on a 25 kB page); never on a whole page of sections |
+| Long task in a lazy chunk right after load | work at module evaluation (canvas/context creation, measuring) | do it on first use, after the visibility gate |
 
 ## Report
 

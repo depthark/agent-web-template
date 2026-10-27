@@ -35,12 +35,14 @@ export interface Project {
 // o, s, u, v, z) never ends a line – the space after it becomes a no-break
 // space. Applied to all CMS text here, so editors never have to think of it;
 // URLs, paths, e-mails and identifiers are left alone.
-const NBSP_AFTER = /(^|[\s(„“"])([aikosuvzAIKOSUVZ]) +/g;
+const NBSP_AFTER = /(?<=^|[\s\u00A0(„“"])([aikosuvzAIKOSUVZ]) +/g;
+// A number stays with the word it counts ("124 komponent").
+const NBSP_NUMBER = /(\d) +(?=\p{L})/gu;
 const SKIP_KEYS = new Set(["href", "moreHref", "src", "image", "slug", "recipients", "language", "lang", "date"]);
 function typeset<T>(value: T, key = ""): T {
   if (typeof value === "string") {
     if (SKIP_KEYS.has(key) || /^(\/|https?:|mailto:)/.test(value) || value.includes("@")) return value;
-    return value.replace(NBSP_AFTER, "$1$2\u00A0") as T;
+    return value.replace(NBSP_AFTER, "$1\u00A0").replace(NBSP_NUMBER, "$1\u00A0") as T;
   }
   if (Array.isArray(value)) return value.map((item) => typeset(item, key)) as T;
   if (value && typeof value === "object") {
