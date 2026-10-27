@@ -31,6 +31,24 @@ export interface Project {
   images: GalleryImage[];
 }
 
+// Czech/Slovak typography: a one-letter preposition or conjunction (a, i, k,
+// o, s, u, v, z) never ends a line – the space after it becomes a no-break
+// space. Applied to all CMS text here, so editors never have to think of it;
+// URLs, paths, e-mails and identifiers are left alone.
+const NBSP_AFTER = /(^|[\s(„“"])([aikosuvzAIKOSUVZ]) +/g;
+const SKIP_KEYS = new Set(["href", "moreHref", "src", "image", "slug", "recipients", "language", "lang", "date"]);
+function typeset<T>(value: T, key = ""): T {
+  if (typeof value === "string") {
+    if (SKIP_KEYS.has(key) || /^(\/|https?:|mailto:)/.test(value) || value.includes("@")) return value;
+    return value.replace(NBSP_AFTER, "$1$2\u00A0") as T;
+  }
+  if (Array.isArray(value)) return value.map((item) => typeset(item, key)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, typeset(v, k)])) as T;
+  }
+  return value;
+}
+
 // One file per project (CMS folder collection "Projekty"), sorted by `order`.
 const projects = Object.values(
   import.meta.glob<Project>("./content/projects/*.json", { eager: true, import: "default" }),
@@ -76,10 +94,10 @@ export const site = {
     phones: company.contacts.map((person) => person.phone).filter(Boolean),
     emails: company.contacts.map((person) => person.email).filter(Boolean),
   },
-  home: { ...home, faq: home.faq as FaqItem[] },
-  projectsPage,
-  projects: projects.map((project) => ({ ...project, images: project.images ?? [] })),
-  contactPage: contact,
+  home: typeset({ ...home, faq: home.faq as FaqItem[] }),
+  projectsPage: typeset(projectsPage),
+  projects: projects.map((project) => typeset({ ...project, images: project.images ?? [] })),
+  contactPage: typeset(contact),
 };
 
 export type SiteData = typeof site;

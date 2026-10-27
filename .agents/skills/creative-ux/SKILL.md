@@ -47,7 +47,7 @@ Define in `experience.md` and as tokens in `public/styles/tailwind.source.css` (
 - Fluid scale with `clamp()` tied to the grid; display sizes may use container units in heroes.
 - Line length 60–75 ch for body; `text-wrap: pretty` for body, `balance` for headings.
 - Kinetic type: animate variable-font axes (`font-variation-settings` via registered `@property`) or transforms on whole lines – never split words into letter spans unless the parent has the real text for assistive tech (see expressive-a11y).
-- **Czech**: test diacritics in the display face at the tightest leading used; never all-caps tracking so wide that `Ř`/`Č` carons collide with the line above; keep `lang="cs"` so hyphenation (`hyphens: auto`) works; non-breaking space after one-letter prepositions (v, k, s, z, o, u, a, i) in headings – handle in content or with a small build-time helper.
+- **Czech**: test diacritics in the display face at the tightest leading used; never all-caps tracking so wide that `Ř`/`Č` carons collide with the line above; keep `lang="cs"` so hyphenation (`hyphens: auto`) works; non-breaking space after one-letter prepositions (v, k, s, z, o, u, a, i) – `typeset()` in `src/data/site.ts` does it for all CMS text at build time.
 
 ## 5. Navigation
 
