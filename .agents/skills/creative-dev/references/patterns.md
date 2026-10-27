@@ -38,6 +38,8 @@ Rules: names unique per page; ≤ 400 ms; never animate layout-heavy elements; b
 
 ## 2. Scroll-driven motion
 
+**Write scroll-driven animations as longhands** (`animation-name`, `animation-timing-function`, `animation-fill-mode`, `animation-timeline`, `animation-range`), never `animation: x linear both` + `animation-timeline`. The build's CSS minifier (Lightning CSS) folds the timeline into the shorthand (`animation: linear both x view()`), which Chromium rejects – the whole declaration is dropped and the animation silently never runs. `bun run creative:check` fails the build output if this happens. (`global.css` is inlined unminified, so its `data-reveal` shorthand is safe – but use longhands everywhere anyway.)
+
 Chapter progress (whole page):
 
 ```css
@@ -50,7 +52,9 @@ Chapter progress (whole page):
   @supports (animation-timeline: scroll()) {
     .progress {
       transform-origin: 0 50%;
-      animation: grow-x linear both;
+      animation-name: grow-x;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: scroll(root);
     }
   }
@@ -63,7 +67,9 @@ Element tied to its own visibility (scrub, not trigger):
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .plate {
-      animation: plate-open linear both;
+      animation-name: plate-open;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: entry 10% cover 45%;
     }
@@ -93,7 +99,9 @@ Sticky stage ("long take"): a tall section, a sticky child, and a named view tim
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .stage__layer {
-      animation: layer-in linear both;
+      animation-name: layer-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: --stage;
       animation-range: contain 0% contain 100%;
     }
@@ -177,7 +185,9 @@ Touch users get the static state – design it as the default.
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .display {
-      animation: weight-in linear both;
+      animation-name: weight-in;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: view();
       animation-range: entry 0% cover 40%;
     }

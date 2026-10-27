@@ -15,31 +15,32 @@
 
 @theme {
   /* Surfaces -------------------------------------------------- */
-  --color-background: oklch(0.985 0.003 260);
-  --color-surface: oklch(0.955 0.005 260);
-  --color-surface-elevated: oklch(0.995 0.002 260);
+  --color-background: oklch(0.972 0.01 85); /* paper */
+  --color-surface: oklch(0.945 0.012 85);
+  --color-surface-elevated: oklch(0.99 0.006 85);
 
   /* Text ------------------------------------------------------ */
-  --color-foreground: oklch(0.21 0.01 260);
-  --color-muted: oklch(0.43 0.012 260);
-  --color-subtle: oklch(0.56 0.012 260);
+  --color-foreground: oklch(0.2 0.012 60); /* ink, 16.7:1 */
+  --color-muted: oklch(0.42 0.012 60); /* 7.8:1 */
+  --color-subtle: oklch(0.5 0.012 60); /* 5.5:1 */
 
   /* Borders --------------------------------------------------- */
-  --color-border: oklch(0.21 0.01 260 / 0.09);
-  --color-border-strong: oklch(0.21 0.01 260 / 0.18);
+  --color-border: oklch(0.2 0.012 60 / 0.12);
+  --color-border-strong: oklch(0.2 0.012 60 / 0.32);
 
   /* Action – filled buttons / CTAs. Neutral ink, so the brand colour
      stays an accent and contrast is safe in both themes. */
-  --color-action: oklch(0.23 0.01 260);
-  --color-action-hover: oklch(0.33 0.012 260);
-  --color-on-action: oklch(0.99 0.002 260);
+  --color-action: oklch(0.2 0.012 60);
+  --color-action-hover: oklch(0.32 0.014 60);
+  --color-on-action: oklch(0.972 0.01 85);
 
   /* Brand accent – text accents only: eyebrows, links, thin lines, icons,
      focus rings. Never large fills or button backgrounds. */
-  --color-primary: oklch(0.5 0.16 262); /* ≈ 5.9:1 on background */
-  --color-primary-hover: oklch(0.43 0.16 262);
-  --color-primary-soft: oklch(0.94 0.03 262);
-  --color-accent: oklch(0.75 0.09 262); /* light tint for lines and glows */
+  /* Vermilion – the proof-reader's ink of specimen sheets. */
+  --color-primary: oklch(0.53 0.19 33); /* 5.4:1 on paper, 4.9:1 on surface */
+  --color-primary-hover: oklch(0.46 0.19 33);
+  --color-primary-soft: oklch(0.93 0.035 40);
+  --color-accent: oklch(0.78 0.13 45); /* text on always-dark areas, 9.5:1 on footer */
 
   /* Form states – valid / invalid fields, success and error messages */
   --color-success: oklch(0.52 0.13 150);
@@ -48,12 +49,12 @@
   --color-danger-soft: oklch(0.95 0.03 27);
 
   /* Ink – dark sections that stay dark in both themes (hero, CTA) */
-  --color-ink: oklch(0.21 0.008 260);
-  --color-ink-deep: oklch(0.17 0.006 260);
+  --color-ink: oklch(0.2 0.012 60);
+  --color-ink-deep: oklch(0.16 0.008 60);
 
   /* Footer – always darker than the page background */
-  --color-footer-bg: oklch(0.18 0.006 260);
-  --color-footer-text: oklch(0.86 0.004 260);
+  --color-footer-bg: oklch(0.14 0.008 60);
+  --color-footer-text: oklch(0.86 0.01 85); /* 13:1 */
 
   --color-white: oklch(1 0 0);
   --color-black: oklch(0 0 0);
@@ -62,8 +63,13 @@
   /* Self-hosted only (public/fonts/, @font-face inlined by BaseLayout).
      Each family needs a metric-matched "… Fallback" face – see the
      performance-audit skill before adding or swapping a font. */
-  --font-sans: "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  /* One typeface: Anybody sets text (wdth ~96) and display (up to wdth 150). */
+  --font-sans: "Anybody", "Anybody Fallback", ui-sans-serif, system-ui, sans-serif;
+  /* Specimen face: variable wdth 50–150, wght 100–900. */
+  --font-heading: "Anybody", "Anybody Display Fallback", ui-sans-serif, system-ui, sans-serif;
+  /* Marginalia, labels, code: the system's monospace – no extra download
+     (a web mono cost ~18 kB and pushed mobile FCP over budget). */
+  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   --tracking-tight: -0.02em;
   --tracking-wide: 0.08em;
@@ -90,9 +96,11 @@
   /* Motion ---------------------------------------------------- */
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 150ms;
-  --duration-standard: 300ms;
-  --duration-slow: 500ms;
+  /* "Type is set, not animated": a compositor settling a line. */
+  --ease-set: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --duration-fast: 160ms;
+  --duration-standard: 420ms;
+  --duration-slow: 900ms;
 
   /* Z-index (Tailwind v4 does not map --z-* to utilities: use z-[var(--z-modal)]) */
   --z-base: 1;
@@ -114,31 +122,32 @@
 }
 
 [data-theme="dark"] {
-  --color-action: oklch(0.94 0.006 260);
-  --color-action-hover: oklch(0.86 0.008 260);
-  --color-on-action: oklch(0.17 0.008 260);
+  --color-action: oklch(0.94 0.012 85);
+  --color-action-hover: oklch(0.86 0.014 85);
+  --color-on-action: oklch(0.17 0.008 60);
 
-  --color-background: oklch(0.16 0.008 260);
-  --color-surface: oklch(0.22 0.01 260);
-  --color-surface-elevated: oklch(0.25 0.01 260);
+  /* Lamp-black */
+  --color-background: oklch(0.17 0.008 60);
+  --color-surface: oklch(0.21 0.009 60);
+  --color-surface-elevated: oklch(0.24 0.01 60);
 
-  --color-foreground: oklch(0.95 0.004 260);
-  --color-muted: oklch(0.78 0.008 260);
-  --color-subtle: oklch(0.63 0.008 260);
+  --color-foreground: oklch(0.94 0.012 85); /* 16:1 */
+  --color-muted: oklch(0.78 0.01 85); /* 9.6:1 */
+  --color-subtle: oklch(0.68 0.01 85); /* 6.6:1 */
 
-  --color-border: oklch(1 0 0 / 0.08);
-  --color-border-strong: oklch(1 0 0 / 0.16);
+  --color-border: oklch(0.94 0.012 85 / 0.12);
+  --color-border-strong: oklch(0.94 0.012 85 / 0.3);
 
-  --color-primary: oklch(0.76 0.11 262); /* ≈ 8:1 on background */
-  --color-primary-hover: oklch(0.82 0.09 262);
-  --color-primary-soft: oklch(0.3 0.06 262);
-  --color-accent: oklch(0.76 0.11 262);
+  --color-primary: oklch(0.72 0.15 38); /* 7.3:1 on background */
+  --color-primary-hover: oklch(0.8 0.12 40);
+  --color-primary-soft: oklch(0.3 0.06 38);
+  --color-accent: oklch(0.78 0.13 45);
 
   --color-success: oklch(0.76 0.13 150);
   --color-success-soft: oklch(0.27 0.05 150);
   --color-danger: oklch(0.72 0.16 25);
   --color-danger-soft: oklch(0.28 0.06 25);
 
-  --color-footer-bg: oklch(0.11 0.006 260);
-  --color-footer-text: oklch(0.78 0.004 260);
+  --color-footer-bg: oklch(0.12 0.008 60);
+  --color-footer-text: oklch(0.86 0.01 85);
 }

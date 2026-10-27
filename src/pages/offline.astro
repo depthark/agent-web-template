@@ -3,30 +3,41 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import Button from "@/components/ui/Button.astro";
-import { site, telHref } from "@/data/site";
 ---
 
 <BaseLayout
-  title="Jste offline"
-  description="Stránka není dostupná bez připojení k internetu."
+  title="Ste offline"
+  description="Stránka nie je dostupná bez pripojenia na internet."
   pathname="/offline/"
   noindex
 >
   <SiteHeader pathname={Astro.url.pathname} />
-  <main id="main" class="mx-auto flex min-h-[60svh] max-w-3xl flex-col items-center justify-center gap-6 px-4 py-24 text-center">
-    <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">Bez připojení</p>
-    <h1 class="text-4xl text-foreground md:text-5xl">Teď jste offline</h1>
-    <p class="text-lg leading-8 text-muted">
-      Tuto stránku zatím nemáme uloženou. Jakmile se připojení obnoví, načte se znovu.
-      Mezitím nám můžete zavolat.
+  <main id="main" class="status-page mx-auto flex min-h-[60svh] max-w-[90rem] flex-col justify-center gap-6 px-[clamp(1rem,4vw,3rem)] py-24">
+    <p class="status-page__no">Bez pripojenia</p>
+    <h1 class="status-page__title">Ste offline.</h1>
+    <p class="max-w-[50ch] text-lg leading-8 text-muted">
+      Túto stránku ešte nemám uloženú. Keď sa pripojenie obnoví, načíta sa znova.
     </p>
-    <div class="flex flex-wrap justify-center gap-3">
-      <Button as="a" href={telHref(site.company.phones[0])} variant="primary" size="lg" rel={undefined}>
-        Zavolat {site.company.phones[0]}
-      </Button>
-      <Button as="a" href="" variant="outline" size="lg" rel={undefined}>Zkusit znovu</Button>
-    </div>
+    <div><Button as="a" href="" variant="primary" size="lg" rel={undefined}>Skúsiť znova</Button></div>
   </main>
   <SiteFooter />
 </BaseLayout>
 
+<style>
+  .status-page__no {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .status-page__title {
+    max-inline-size: 13.2em; /* em, not ch: ch changes with the font (swap) */
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-variation-settings: "wdth" 130;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+</style>

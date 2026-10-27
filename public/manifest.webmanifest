@@ -1,9 +1,9 @@
 {
   "id": "./",
-  "name": "Název firmy – krátký podtitul",
-  "short_name": "Název firmy",
-  "description": "Jedna věta o firmě (stejná jako v Nastavení).",
-  "lang": "cs",
+  "name": "Lukáš Chylík – kreatívny webový vývojár",
+  "short_name": "Lukáš Chylík",
+  "description": "Frontend s presahom do UX/UI, dizajnové systémy, moderné CSS a AI v praxi.",
+  "lang": "sk",
   "dir": "ltr",
   "start_url": "./?source=pwa",
   "scope": "./",
@@ -14,10 +14,11 @@
     "minimal-ui"
   ],
   "orientation": "any",
-  "background_color": "#f8f9fb",
-  "theme_color": "#1b1d24",
+  "background_color": "#f9f5ee",
+  "theme_color": "#1a1511",
   "categories": [
-    "business"
+    "productivity",
+    "education"
   ],
   "icons": [
     {
@@ -53,8 +54,8 @@
   ],
   "shortcuts": [
     {
-      "name": "Projekty",
-      "short_name": "Projekty",
+      "name": "Práca",
+      "short_name": "Práca",
       "url": "projekty/?source=pwa",
       "icons": [
         {

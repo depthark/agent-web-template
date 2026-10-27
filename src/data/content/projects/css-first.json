@@ -1,0 +1,8 @@
+{
+  "order": 2,
+  "slug": "css-first",
+  "title": "css-first",
+  "subtitle": "Open source · agent skill a MCP server",
+  "text": "Skill pre AI agentov, ktorý presadzuje jednoduché pravidlo: **najprv sémantické HTML a CSS, JavaScript až keď to inak nejde**.\n\n- 74 produkčných CSS ukážok podľa kategórií – od `:has()` po `scroll-state()`\n- stav podpory z oficiálneho Web Platform Status API, nie z odhadov\n- pravidlá pre logické vlastnosti, progresívne vylepšenie a overenie v prehliadači\n- licencia MIT, dostupný na skills.sh\n\n[Zdrojový kód na GitHube](https://github.com/luko248/css-first-skill)",
+  "images": []
+}

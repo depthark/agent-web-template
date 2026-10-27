@@ -12,7 +12,7 @@ export const GET: APIRoute = () => {
   const lastmod = new Date().toISOString().slice(0, 10);
   const imagesFor = (href: string): Array<{ loc: string; title: string }> => {
     if (href === "/")
-      return [{ loc: shareImage(site.home.hero.image), title: site.home.hero.imageAlt }];
+      return site.home.hero.image ? [{ loc: shareImage(site.home.hero.image), title: site.home.hero.imageAlt }] : [];
     if (href === "/projekty/")
       return site.projects.flatMap((project) =>
         getProjectMedia(project).map(({ set, alt }) => ({ loc: absoluteUrl(site.siteUrl, set, 2400), title: alt })),

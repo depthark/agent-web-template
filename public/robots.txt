@@ -4,4 +4,4 @@ Disallow: /admin/
 Disallow: /api/
 
 # AI agents: a concise brief lives at /llms.txt, structured data at /agent/site.json
-Sitemap: https://www.example.cz/sitemap.xml
+Sitemap: https://lukaschylik.dev/sitemap.xml

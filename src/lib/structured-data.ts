@@ -16,9 +16,9 @@ import { getProjectMedia } from "@/lib/gallery";
 type Node = Record<string, unknown>;
 
 /** e.g. ["ProfessionalService", "HomeAndConstructionBusiness"], "Restaurant", "Dentist" … */
-const BUSINESS_TYPE: string | string[] = "LocalBusiness";
+const BUSINESS_TYPE: string | string[] = "ProfessionalService";
 
-const locale = site.language === "cs" ? "cs-CZ" : site.language;
+const locale = ({ cs: "cs-CZ", sk: "sk-SK" } as Record<string, string>)[site.language] ?? site.language;
 
 export const ids = {
   website: `${site.siteUrl}/#website`,
@@ -40,9 +40,10 @@ const people = (): Node[] =>
     "@id": ids.person(index),
     name: person.name,
     jobTitle: person.role,
-    email: `mailto:${person.email}`,
-    telephone: person.phone,
+    ...(person.email ? { email: `mailto:${person.email}` } : {}),
+    ...(person.phone ? { telephone: person.phone } : {}),
     worksFor: { "@id": ids.business },
+    sameAs: Object.values(site.social).filter(Boolean),
   }));
 
 const business = (): Node => {
@@ -58,12 +59,12 @@ const business = (): Node => {
     url: `${site.siteUrl}/`,
     image: ogImageFor("/"),
     logo: `${site.siteUrl}/images/favicons/web-app-manifest-512x512.png`,
-    telephone: company.phones[0],
-    email: company.emails[0],
+    ...(company.phones[0] ? { telephone: company.phones[0] } : {}),
+    ...(company.emails[0] ? { email: company.emails[0] } : {}),
     address: {
       "@type": "PostalAddress",
-      streetAddress: company.street,
-      postalCode: company.postalCode,
+      ...(company.street ? { streetAddress: company.street } : {}),
+      ...(company.postalCode ? { postalCode: company.postalCode } : {}),
       addressLocality: company.city,
       addressRegion: company.region,
       addressCountry: company.country,
@@ -81,7 +82,7 @@ const business = (): Node => {
       opens: hours.opens,
       closes: hours.closes,
     })),
-    contactPoint: company.contacts.map((person) => ({
+    contactPoint: company.contacts.filter((person) => person.phone || person.email).map((person) => ({
       "@type": "ContactPoint",
       contactType: "customer service",
       name: person.name,

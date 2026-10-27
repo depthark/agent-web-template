@@ -1,0 +1,317 @@
+---
+/**
+ * Tab. 00 – Špecimen (signature, docs/creative/experience.md). The name is
+ * the image: set in Anybody, whose width axis condenses as the name leaves
+ * the viewport; below it the Slovak alphabet as a specimen waterfall, each
+ * line sweeping its own width as it crosses the screen. The margin readouts
+ * are CSS counters bound to the same registered custom properties – no JS.
+ *
+ * Still by default (reduced motion, no scroll timelines): the name at
+ * wdth 150 / wght 800 and the waterfall stepping 150 → 50, readouts static.
+ */
+import Button from "@/components/ui/Button.astro";
+import { site } from "@/data/site";
+import { withBase } from "@/lib/navigation";
+
+const { hero } = site.home;
+const [first, ...rest] = site.name.split(" ");
+const lines = [first, rest.join(" ")].filter(Boolean);
+
+const ALPHABET =
+  "Aa Áá Ää Bb Cc Čč Dd Ďď Dz Dž Ee Éé Ff Gg Hh Ch Ii Íí Jj Kk Ll Ĺĺ Ľľ Mm Nn Ňň Oo Óó Ôô Pp Qq Rr Ŕŕ Ss Šš Tt Ťť Uu Úú Vv Ww Xx Yy Ýý Zz Žž";
+// The classic Slovak pangram – every letter with its diacritics, one sentence.
+const PANGRAM = "Kŕdeľ šťastných ďatľov učí pri ústí Váhu mĺkveho koňa obhrýzať kôru a žrať čerstvé mäso.";
+const rows = [
+  { rem: 6, wdth: 150, wght: 800, text: ALPHABET },
+  { rem: 4, wdth: 125, wght: 640, text: ALPHABET },
+  { rem: 2.75, wdth: 100, wght: 480, text: ALPHABET },
+  { rem: 1.75, wdth: 75, wght: 340, text: ALPHABET },
+  { rem: 1.25, wdth: 50, wght: 300, text: ALPHABET },
+];
+---
+
+<section id="specimen" class="specimen" aria-labelledby="specimen-name">
+  <div class="specimen__margin">
+    <div class="specimen__notes">
+      <p class="specimen__no">Tab. 00</p>
+      <p>Špecimen</p>
+      <p><code>font-family: Anybody</code></p>
+      <p aria-hidden="true">wght <span class="readout readout--wght"></span></p>
+      <p aria-hidden="true">wdth <span class="readout readout--wdth"></span></p>
+      <p class="specimen__baseline">Baseline: scroll-driven animácie – obmedzená dostupnosť</p>
+    </div>
+  </div>
+
+  <div class="specimen__body">
+    <p class="specimen__eyebrow">{hero.eyebrow}</p>
+    <h1 id="specimen-name" class="specimen__name">
+      {lines.map((line, i) => <span class="specimen__line" style={`--i: ${i}`}>{line}</span>)}
+    </h1>
+    <p class="specimen__claim">{hero.title}</p>
+    {hero.text && <p class="specimen__text">{hero.text}</p>}
+    <div class="specimen__ctas">
+      <Button as="a" href={withBase(hero.primaryCta.href)} variant="primary" size="lg" rel={undefined} class="w-full sm:w-auto">
+        {hero.primaryCta.label}
+      </Button>
+      <Button as="a" href={withBase(hero.secondaryCta.href)} variant="outline" size="lg" rel={undefined} class="w-full sm:w-auto">
+        {hero.secondaryCta.label}
+      </Button>
+    </div>
+  </div>
+
+  <div class="waterfall" aria-hidden="true">
+    {
+      rows.map((row) => (
+        <div class="waterfall__row" style={`--size: ${row.rem}rem; --wdth: ${row.wdth}; --wght: ${row.wght}`}>
+          <p class="waterfall__label">
+            {Math.round(row.rem * 16)} px · wdth <span class="readout readout--wdth" />
+          </p>
+          <p class="waterfall__text">{row.text}</p>
+        </div>
+      ))
+    }
+    <div class="waterfall__row waterfall__row--text" style="--wdth: 100; --wght: 400">
+      <p class="waterfall__label">pangram · 18 px · wdth <span class="readout readout--wdth" /></p>
+      <p class="waterfall__text waterfall__text--pangram" lang="sk">{PANGRAM}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Registered so they interpolate (and can feed counters) – integers. */
+  @property --wdth {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 150;
+  }
+
+  @property --wght {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 800;
+  }
+
+  .specimen {
+    --wdth: 150;
+    --wght: 800;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding-block: clamp(2.5rem, 7vw, 6rem) clamp(3rem, 8vw, 6rem);
+    timeline-scope: --specimen-name;
+  }
+
+  .specimen__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .specimen__no {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .specimen__notes code {
+    font-size: inherit;
+    color: var(--color-foreground);
+  }
+
+  .specimen__baseline {
+    flex-basis: 100%;
+    color: var(--color-subtle);
+  }
+
+  .readout::after {
+    counter-reset: v var(--wdth);
+    content: counter(v);
+    color: var(--color-primary);
+  }
+
+  .readout--wght::after {
+    counter-reset: v var(--wght);
+  }
+
+  .specimen__body {
+    container-type: inline-size;
+    min-inline-size: 0;
+  }
+
+  .specimen__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-primary);
+  }
+
+  .specimen__name {
+    margin-block-start: 0.75rem;
+    font-family: var(--font-heading);
+    font-size: min(18.5cqi, 13rem);
+    line-height: 0.86;
+    letter-spacing: -0.01em;
+    view-timeline: --specimen-name block;
+  }
+
+  .specimen__line {
+    display: block;
+    white-space: nowrap;
+    font-weight: 800;
+    font-variation-settings:
+      "wdth" var(--wdth),
+      "wght" var(--wght);
+  }
+
+  .specimen__claim {
+    margin-block-start: clamp(1.5rem, 4vw, 2.5rem);
+    max-inline-size: 10.2em; /* em, not ch: ch changes with the font (swap) */
+    font-family: "Anybody", "Anybody Claim Fallback", ui-sans-serif, system-ui, sans-serif;
+    font-size: clamp(1.75rem, 5cqi, 3.25rem);
+    font-variation-settings: "wdth" 100;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .specimen__text {
+    margin-block-start: 1.25rem;
+    max-inline-size: 60ch;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+
+  .specimen__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 2rem;
+  }
+
+  /* Waterfall: full width under both columns, lines bleed off the right edge. */
+  .waterfall {
+    grid-column: 1 / -1;
+    margin-block-start: clamp(2rem, 6vw, 4.5rem);
+    border-block-start: 1px solid var(--color-border-strong);
+    overflow-x: clip;
+  }
+
+  .waterfall__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+    padding-block: 0.9rem;
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .waterfall__label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-subtle);
+  }
+
+  .waterfall__text {
+    font-family: var(--font-heading);
+    font-size: min(var(--size), calc(var(--size) * 0.55 + 4vw));
+    font-variation-settings:
+      "wdth" var(--wdth),
+      "wght" var(--wght);
+    line-height: 1.12;
+    white-space: nowrap;
+    overflow: clip;
+  }
+
+  .waterfall__text--pangram {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    white-space: normal;
+    max-inline-size: 70ch;
+  }
+
+  @media (min-width: 56rem) {
+    .specimen {
+      grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+    }
+
+    .specimen__notes {
+      flex-direction: column;
+      gap: 0.35rem;
+      padding-block-start: 0.5rem;
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    .waterfall__row {
+      grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+      align-items: baseline;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrance: each line of the name settles into place – compositor-only
+       (an axis animation here re-laid out the largest text every frame and
+       cost 3.9 s speed index on a throttled phone, review round 2). */
+    .specimen__line {
+      animation: set-line 450ms var(--ease-set) both;
+      animation-delay: calc(var(--i) * 60ms);
+    }
+
+    @supports (animation-timeline: view()) {
+      /* The whole plate follows the name out of the viewport: name and margin
+         readouts condense together. */
+      /* Longhands on purpose: the minifier folds a timeline into the
+         "animation" shorthand, which Chromium rejects (creative-dev skill). */
+      .specimen {
+        animation-name: condense;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --specimen-name;
+        animation-range: exit 0% exit 100%;
+      }
+
+      /* Each waterfall line sweeps its width as it crosses the screen. */
+      .waterfall__row:not(.waterfall__row--text) {
+        animation-name: sweep;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: cover 10% cover 90%;
+      }
+    }
+  }
+
+  @keyframes set-line {
+    from {
+      opacity: 0.001;
+      translate: 0 0.12em;
+    }
+  }
+
+  @keyframes condense {
+    to {
+      --wdth: 60;
+      --wght: 300;
+    }
+  }
+
+  @keyframes sweep {
+    from {
+      --wdth: 150;
+    }
+    to {
+      --wdth: 50;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .readout::after {
+      color: CanvasText;
+    }
+  }
+</style>

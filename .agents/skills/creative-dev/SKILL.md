@@ -36,6 +36,7 @@ Rule of thumb: most award moments are L1–L2 with one L5. L6 needs the brief to
 - **Pause what is not seen**: loops stop off-screen (`IntersectionObserver`) and in hidden tabs (`visibilitychange`).
 - **Never** `cursor: none`, `maximum-scale`, positive `tabindex`, autoplaying sound, text inside canvas.
 - **Budgets per page** (gzip): HTML incl. inline CSS ≤ 50 kB, initial JS ≤ 50 kB, lazy JS ≤ 300 kB. Lighthouse 100 ×4 (+ agentic browsing) mobile and desktop, mobile LCP < 2 s, CLS ≤ 0.01, TBT 0 ms.
+- **Scroll-driven animations as longhands** (`animation-name` … `animation-timeline`): the minifier folds a timeline into the `animation` shorthand, which Chromium drops (patterns §2; `creative-check` catches it).
 - **Animate compositor properties**: `transform`, `opacity`, `filter`, `clip-path` (mostly). Not `width/height/top/left/margin`, not `box-shadow` on large areas. Font-axis animation reflows text – only on short display lines.
 
 ## Where things go

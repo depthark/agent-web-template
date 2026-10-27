@@ -11,7 +11,7 @@ interface Props {
   title?: string;
 }
 
-const { items, title = "Časté dotazy" } = Astro.props;
+const { items, title = "Časté otázky" } = Astro.props;
 ---
 
 {
@@ -25,7 +25,7 @@ const { items, title = "Časté dotazy" } = Astro.props;
         <SectionIntro
           eyebrow="FAQ"
           title={title}
-          text="Nenašli jste odpověď? Zavolejte nebo napište, rádi poradíme."
+          text="Nenašli ste odpoveď? Napíšte mi."
           headingId="faq-title"
         />
         <div class="faq" data-reveal>

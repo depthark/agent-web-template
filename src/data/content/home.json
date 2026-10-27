@@ -1,56 +1,95 @@
 {
   "seo": {
-    "title": "Hlavní služba ve městě",
-    "description": "Popis úvodní stránky pro Google (do 160 znaků): co děláte, pro koho a proč právě vy.",
+    "title": "Kreatívny webový vývojár",
+    "description": "Frontend s presahom do UX/UI z Brna: dizajnové systémy, moderné CSS a AI v praxi. Workshopy, prednášky a konzultácie pre tímy.",
     "keywords": []
   },
   "hero": {
-    "eyebrow": "Obor · Město",
-    "title": "Krátký, jasný slib pro zákazníka.",
-    "text": "",
-    "image": "/gallery/web/hero",
-    "imageAlt": "Popis úvodní fotky",
+    "eyebrow": "Frontend · UX/UI · Brno",
+    "title": "Najprv CSS. Potom JavaScript.",
+    "text": "Desať rokov staviam weby a dizajnové systémy. Vediem vývoj dizajnového systému VIGo a AI frontend v AIS Servis – a učím tímy pracovať s AI agentmi tak, aby remeslo nestratili.",
+    "image": "",
+    "imageAlt": "",
     "primaryCta": {
       "href": "/kontakt/#poptavka",
-      "label": "Nezávazná poptávka"
+      "label": "Workshop alebo prednáška"
     },
     "secondaryCta": {
       "href": "/projekty/",
-      "label": "Prohlédnout projekty"
+      "label": "Práca"
     }
   },
   "features": {
-    "eyebrow": "Co děláme",
-    "title": "Tři důvody, proč se ozvat právě nám",
+    "eyebrow": "Spolupráca",
+    "title": "Tri vrstvy spolupráce",
     "items": [
       {
-        "title": "První výhoda",
-        "text": "Jedna nebo dvě věty o přínosu pro zákazníka, ne o firmě."
+        "title": "Workshopy a tréningy",
+        "text": "AI vo frontende v praxi: spec-driven development, vlastní AI agenti a AI workflow pre frontendové tímy."
       },
       {
-        "title": "Druhá výhoda",
-        "text": "Konkrétní a ověřitelné: čísla, termíny, zkušenosti."
+        "title": "Prednášky",
+        "text": "Keynote o dizajnových systémoch, CSS, AI a frontendovom workflow – na konferencii aj vo firme."
       },
       {
-        "title": "Třetí výhoda",
-        "text": "Co zákazník získá, když se rozhodne pro vás."
+        "title": "Konzultácie a mentoring",
+        "text": "Druhý pár očí na dizajnový systém, CSS architektúru alebo nasadenie AI do vývoja."
       }
     ]
   },
-  "faq": [
-    {
-      "question": "Častá otázka zákazníka?",
-      "answer": "Stručná a konkrétní odpověď. Otázky se zobrazují i ve výsledcích Google (FAQPage)."
-    },
-    {
-      "question": "Kolik to stojí?",
-      "answer": "Orientační cena nebo postup, jak ji zjistit."
-    }
-  ],
+  "faq": [],
   "cta": {
-    "eyebrow": "Další krok",
-    "title": "Pojďme probrat, co potřebujete.",
-    "label": "Napsat poptávku",
+    "eyebrow": "Ďalší krok",
+    "title": "Workshop, prednáška alebo druhý pár očí na váš frontend?",
+    "label": "Napísať",
     "href": "/kontakt/#poptavka"
+  },
+  "plates": {
+    "system": {
+      "title": "Jeden systém, 124 komponentov",
+      "text": "Vediem vývoj dizajnového systému VIGo pre poisťovne Vienna Insurance Group. Vlastnosti komponentov riadi viac než 2 000 dizajnových premenných a systém beží v back-office aplikáciách Kooperativy a ČPP.",
+      "components": 124,
+      "variables": "2 000+",
+      "href": "/projekty/#vigo"
+    },
+    "writing": {
+      "title": "Píšem o tom, čo práve prichádza do prehliadačov",
+      "items": [
+        { "year": "2026", "title": "CSS View Transitions", "href": "https://lukaschylik.dev/blog/articles/css-view-transitions/" },
+        { "year": "2026", "title": "Figma Beyond Design", "href": "https://lukaschylik.dev/blog/articles/figma-beyond-design/" },
+        { "year": "2025", "title": "CSS Cascade Layers, @scope a moderné selektory", "href": "https://lukaschylik.dev/blog/articles/css-specificita-cascade-layers-scope/" },
+        { "year": "2025", "title": "Farby na webe v roku 2025", "href": "https://lukaschylik.dev/blog/articles/farby-na-webe-v-roku-2025/" }
+      ],
+      "moreLabel": "Všetky články",
+      "moreHref": "https://lukaschylik.dev/blog/"
+    },
+    "talks": {
+      "title": "Na pódiu a medzi frontendistami",
+      "text": "Hostiteľ meetupov Frontendisti Brno.",
+      "items": [
+        { "date": "2026-05", "event": "Web Science", "place": "Brno", "title": "Prednáška o Figme" },
+        { "date": "2026-03", "event": "Frontendisti Brno", "place": "Brno", "title": "Figma nad rámec dizajnu" },
+        { "date": "2025-10", "event": "FrontKon #25", "place": "Brno", "title": "CSS scroll-state container queries a panel o stave CSS" },
+        { "date": "2025-09", "event": "Frontendisti Brno", "place": "Brno", "title": "Diskusný večer o AI toolingu pre webový vývoj – hostiteľ" }
+      ]
+    },
+    "color": {
+      "title": "Farba v priestore OKLCH",
+      "text": "Mapa farieb, ktoré zobrazí bežný sRGB monitor, videná cez OKLCH: odtieň zľava doprava, svetlosť zdola nahor. Vrstevnica ukazuje, kam až siaha jedna hodnota sýtosti. Paleta tohto webu je zapísaná v OKLCH a kontrast každého páru je spočítaný, nie odhadnutý.",
+      "linkLabel": "Farby na webe v roku 2025",
+      "href": "https://lukaschylik.dev/blog/articles/farby-na-webe-v-roku-2025/"
+    },
+    "tools": {
+      "title": "Otvorené nástroje",
+      "items": [
+        { "name": "css-first", "kind": "Agent skill · MIT", "text": "Naučí AI agenta riešiť rozhranie najprv sémantickým HTML a CSS. 74 ukážok a živé dáta Baseline.", "href": "https://github.com/luko248/css-first-skill" },
+        { "name": "css-first MCP", "kind": "MCP server", "text": "Navrhne riešenie UI úlohy čisto v CSS – s modernými a logickými vlastnosťami a témou cez light-dark().", "href": "https://glama.ai/mcp/servers/@Luko248/css-first" },
+        { "name": "agent-web-template", "kind": "Šablóna webu", "text": "Astro, Decap CMS a Cloudflare Pages s Lighthouse 100 – a kreatívny workflow, ktorým vznikol tento web.", "href": "/projekty/#agent-web-template" }
+      ]
+    },
+    "colophon": {
+      "title": "Tiráž",
+      "text": "Celý web je sadzaný jedným písmom – Anybody od Etcetera Type Co. (SIL OFL) – na osiach šírky a váhy; popisky v systémovom neproporcionálnom písme. Postavené na šablóne agent-web-template: Astro, Decap CMS, Cloudflare Pages."
+    }
   }
 }

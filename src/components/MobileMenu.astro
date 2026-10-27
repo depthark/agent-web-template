@@ -25,7 +25,7 @@ const activePath =
     type="button"
     popovertarget="mobile-menu-panel"
     class="mobile-menu__toggle inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-border bg-background/60 text-foreground backdrop-blur transition-colors duration-fast ease-standard hover:border-primary hover:text-primary focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-    aria-label="Navigace"
+    aria-label="Navigácia"
   >
     <span class="relative block h-4 w-5" aria-hidden="true">
       <span class="mobile-menu__bar absolute inset-x-0 top-0 h-0.5 origin-center rounded-full bg-current"></span>
@@ -36,7 +36,7 @@ const activePath =
 
   <div id="mobile-menu-panel" popover class="mobile-menu glass-strong">
     <div class="flex h-full flex-col gap-6 overflow-y-auto px-4 pt-6 pb-8 sm:px-6 min-[480px]:gap-8 min-[480px]:pb-10">
-      <nav class="flex w-full flex-1 items-center" aria-label="Hlavní navigace">
+      <nav class="flex w-full flex-1 items-center" aria-label="Hlavná navigácia">
         <ul class="m-0 flex w-full list-none flex-col gap-2 p-0">
           {
             site.nav.map((item, index) => {
@@ -66,7 +66,7 @@ const activePath =
           href={withBase("/kontakt/#poptavka")}
           class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-action px-6 py-3.5 text-base font-semibold text-on-action no-underline shadow-lifted transition-colors duration-fast ease-standard hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
-          Kontaktujte nás
+          Napísať mi
           <Icon name="arrow-right" variant="mini" class="h-5 w-5" />
         </a>
 

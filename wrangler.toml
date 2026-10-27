@@ -1,6 +1,6 @@
 # Cloudflare Pages project configuration (see DEPLOY.md and the
 # cloudflare-deploy skill). Static Astro build served from dist/; functions/
 # adds /api/* (CMS login, contact form). Set `name` to the Pages project name.
-name = "example-cz"
+name = "lukaschylik-dev"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-10-01"

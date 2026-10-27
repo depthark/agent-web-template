@@ -15,7 +15,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const OUT = "public/images/favicons";
 const LOGO = "public/images/logo.svg";
-const INK = "#1b1d24";
+const INK = "#1a1511";
 /** Square around the symbol in the logo's viewBox units, or null for the whole logo. */
 const MARK_VIEWBOX: string | null = null;
 

@@ -34,18 +34,21 @@ const leadSizes = "(min-width: 1024px) 660px, 92vw";
   aria-describedby={descriptionId}
 >
   <div class="space-y-4 lg:sticky lg:top-28 lg:self-start" data-reveal>
-    <h2 id={headingId} class="text-3xl leading-tight text-foreground">{project.title}</h2>
+    <h2 id={headingId} class="project-title text-foreground">{project.title}</h2>
     {
       project.subtitle && (
-        <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">{project.subtitle}</p>
+        <p class="font-mono text-[0.8125rem] text-primary">{project.subtitle}</p>
       )
     }
-    <div id={descriptionId} class="project-text text-base leading-8 text-muted" set:html={descriptionHtml} />
+    {media.length > 0 && <div id={descriptionId} class="project-text text-base leading-8 text-muted" set:html={descriptionHtml} />}
   </div>
+
+  {/* Text-only project: the description takes the second column. */}
+  {media.length === 0 && <div id={descriptionId} class="project-text max-w-[62ch] text-base leading-8 text-muted" set:html={descriptionHtml} />}
 
   {
     media.length > 0 && (
-      <ul class="references-grid list-none py-4" aria-label={`Galerie — ${project.title}`}>
+      <ul class="references-grid list-none py-4" aria-label={`Galéria — ${project.title}`}>
         {media.map(({ alt, set, focus }, index) => {
           const lead = leads && index === 0;
           const max = lead ? LIGHTBOX_MIN : TILE_MAX;
@@ -60,7 +63,7 @@ const leadSizes = "(min-width: 1024px) 660px, 92vw";
                 data-sizes={`min(100vw, ${Math.round((100 * set.width) / set.height)}vh)`}
                 data-width={set.width}
                 data-height={set.height}
-                aria-label={`Zvětšit: ${alt}`}
+                aria-label={`Zväčšiť: ${alt}`}
                 class="glass-hover group relative block overflow-hidden rounded-lg bg-surface shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lifted"
               >
                 <img
@@ -85,6 +88,17 @@ const leadSizes = "(min-width: 1024px) 660px, 92vw";
 </section>
 
 <style>
+  /* Display role: wdth 120 / wght 800 – the width its fallback face is
+     calibrated for (BaseLayout), so a late font swap does not re-wrap it. */
+  .project-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-variation-settings: "wdth" 120;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+
   /* Rich text from the CMS editor: paragraphs, bold, lists, links. */
   .project-text :global(> * + *) {
     margin-top: calc(var(--spacing) * 4);

@@ -36,21 +36,37 @@ const projects = Object.values(
   import.meta.glob<Project>("./content/projects/*.json", { eager: true, import: "default" }),
 ).sort((a, b) => (a.order ?? 99) - (b.order ?? 99) || a.title.localeCompare(b.title, settings.language));
 
-const company = settings.company;
-const address = `${company.street}, ${company.postalCode} ${company.city}`;
+// Lists the CMS may leave empty are typed explicitly: TypeScript infers an
+// empty JSON array as never[], which would break every consumer.
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface OpeningHours {
+  days: string[];
+  opens: string;
+  closes: string;
+}
+
+const company = { ...settings.company, openingHours: settings.company.openingHours as OpeningHours[] };
+// Empty parts (a person without a street address) are left out, not printed as ", ".
+const address = [company.street, [company.postalCode, company.city].filter(Boolean).join(" ")]
+  .filter(Boolean)
+  .join(", ");
 
 export const site = {
   name: settings.name,
   tagline: settings.tagline,
   language: settings.language,
-  siteUrl: (import.meta.env.PUBLIC_SITE_URL || import.meta.env.SITE || "https://www.example.cz").replace(/\/$/, ""),
+  siteUrl: (import.meta.env.PUBLIC_SITE_URL || import.meta.env.SITE || "https://lukaschylik.dev").replace(/\/$/, ""),
   description: settings.description,
   keywords: settings.keywords,
   googleSiteVerification: settings.googleSiteVerification,
   gtmId: settings.analytics.gtmId,
   nav: [
     { href: "/", label: "Úvod" },
-    { href: "/projekty/", label: "Projekty" },
+    { href: "/projekty/", label: "Práca" },
     { href: "/kontakt/", label: "Kontakt" },
   ],
   social: settings.social,
@@ -60,7 +76,7 @@ export const site = {
     phones: company.contacts.map((person) => person.phone).filter(Boolean),
     emails: company.contacts.map((person) => person.email).filter(Boolean),
   },
-  home,
+  home: { ...home, faq: home.faq as FaqItem[] },
   projectsPage,
   projects: projects.map((project) => ({ ...project, images: project.images ?? [] })),
   contactPage: contact,

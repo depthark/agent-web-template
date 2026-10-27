@@ -1,0 +1,83 @@
+---
+/**
+ * Tab. 01 sample: one cell per component of the design system. Cells "set"
+ * in order as the grid crosses the viewport – one registered integer (--p)
+ * drives every cell's opacity through calc(), and a CSS counter reads it out.
+ * Still (reduced motion, no scroll timelines): all cells set.
+ */
+export interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+---
+
+<div class="system" style={`--count: ${count}; --p: ${count}`}>
+  <div class="system__cells" aria-hidden="true">
+    {Array.from({ length: count }, (_, i) => <span style={`--i: ${i}`} />)}
+  </div>
+  <p class="system__readout" aria-hidden="true">
+    <code>--p</code> <span class="system__count"></span> / {count}
+  </p>
+</div>
+
+<style>
+  @property --p {
+    syntax: "<integer>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .system__cells {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(1.05rem, 1fr));
+    gap: 4px;
+    max-inline-size: 46rem;
+  }
+
+  .system__cells span {
+    aspect-ratio: 1;
+    background: var(--color-foreground);
+    opacity: clamp(0.1, calc(var(--p) - var(--i)), 1);
+  }
+
+  .system__readout {
+    margin-block-start: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .system__count::after {
+    counter-reset: p var(--p);
+    content: counter(p);
+    color: var(--color-primary);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .system {
+        animation-name: set-cells;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 30% cover 55%;
+      }
+    }
+  }
+
+  @keyframes set-cells {
+    from {
+      --p: 0;
+    }
+    to {
+      --p: var(--count);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .system__cells span {
+      background: CanvasText;
+    }
+  }
+</style>

@@ -1,0 +1,8 @@
+{
+  "order": 3,
+  "slug": "agent-web-template",
+  "title": "agent-web-template",
+  "subtitle": "Šablóna webov pre AI agentov · 2026",
+  "text": "Šablóna pre weby malých firiem a portfóliá, ktorú od začiatku do konca vedie AI agent.\n\n- Astro, TypeScript 7, Bun, Tailwind CSS v4, Decap CMS, Cloudflare Pages\n- Lighthouse 100 vo všetkých kategóriách na mobile aj desktope\n- fotky ako sady AVIF priamo v repozitári, kontaktný formulár cez Resend\n- kreatívny workflow s agentmi a kontrolami prístupnosti a výkonu – **týmto workflowom vznikol aj tento web**",
+  "images": []
+}

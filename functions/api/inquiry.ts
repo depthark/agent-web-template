@@ -82,10 +82,10 @@ async function readBody(request: Request): Promise<Inquiry> {
 }
 
 function validate(data: Inquiry): string | null {
-  if (!data.name || !data.email || !data.message) return "Vyplňte jméno, e-mail a zprávu.";
-  if (!EMAIL.test(data.email)) return "Zkontrolujte prosím e-mailovou adresu.";
+  if (!data.name || !data.email || !data.message) return "Vyplňte meno, e-mail a správu.";
+  if (!EMAIL.test(data.email)) return "Skontrolujte prosím e-mailovú adresu.";
   for (const [key, max] of Object.entries(LIMITS)) {
-    if (data[key as keyof typeof LIMITS].length > max) return "Zpráva je příliš dlouhá.";
+    if (data[key as keyof typeof LIMITS].length > max) return "Správa je príliš dlhá.";
   }
   return null;
 }
@@ -109,11 +109,11 @@ function recipients(env: Env): string[] {
 }
 
 function compose(data: Inquiry, siteUrl: string) {
-  const subject = `Poptávka z webu${data.topic ? ` – ${data.topic}` : ""} (${data.name})`;
+  const subject = `Správa z webu${data.topic ? ` – ${data.topic}` : ""} (${data.name})`;
   const details: [string, string][] = [
-    ["Jméno", data.name],
+    ["Meno", data.name],
     ["E-mail", data.email],
-    ...(data.phone ? ([["Telefon", data.phone]] as [string, string][]) : []),
+    ...(data.phone ? ([["Telefón", data.phone]] as [string, string][]) : []),
     ...(data.topic ? ([["Téma", data.topic]] as [string, string][]) : []),
   ];
   const text = [data.message, "", ...details.map(([label, value]) => `${label}: ${value}`)].join("\n");
@@ -121,7 +121,7 @@ function compose(data: Inquiry, siteUrl: string) {
 <table cellpadding="4" style="border-collapse:collapse;margin-top:16px">${details
     .map(([label, value]) => `<tr><th align="left">${label}</th><td>${escapeHtml(value)}</td></tr>`)
     .join("")}</table>
-<p style="color:#777;font-size:12px">Odesláno z formuláře na ${escapeHtml(new URL(siteUrl).hostname)} – odpovědí napíšete přímo zákazníkovi.</p>`;
+<p style="color:#777;font-size:12px">Odoslané z formulára na ${escapeHtml(new URL(siteUrl).hostname)} – odpoveď pôjde priamo odosielateľovi.</p>`;
   return { subject, text, html };
 }
 
@@ -130,12 +130,12 @@ function composeConfirmation(data: Inquiry, siteUrl: string) {
   const people = settings.company.contacts;
   const signature = [
     settings.name,
-    ...people.map((person) => `${person.name} – ${person.phone} – ${person.email}`),
+    ...people.map((person) => [person.name, person.phone, person.email].filter(Boolean).join(" – ")),
     siteUrl,
   ];
   const text = [contact.form.confirmationText, "", "—", data.message, "", ...signature].join("\n");
   const html = `<p style="white-space:pre-line">${escapeHtml(contact.form.confirmationText)}</p>
-<blockquote style="margin:16px 0;padding:12px 16px;border-left:3px solid #4F5BD5;background:#f3f4fb;white-space:pre-line">${escapeHtml(data.message)}</blockquote>
+<blockquote style="margin:16px 0;padding:12px 16px;border-left:3px solid #c12b09;background:#f9f5ee;white-space:pre-line">${escapeHtml(data.message)}</blockquote>
 <p style="color:#555;font-size:14px;line-height:1.6">${signature.map(escapeHtml).join("<br>")}</p>`;
   return { subject: contact.form.confirmationSubject, text, html };
 }
@@ -163,7 +163,7 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
   try {
     data = await readBody(request);
   } catch {
-    return reply({ error: "Neplatný požadavek." }, 400);
+    return reply({ error: "Neplatná požiadavka." }, 400);
   }
 
   // Bots: pretend success, send nothing.
@@ -174,13 +174,13 @@ export const onRequestPost = async ({ request, env }: Context): Promise<Response
 
   const to = recipients(env);
   if (!env.RESEND_API_KEY || to.length === 0) {
-    return reply({ error: "Odesílání z webu není nastavené." }, 503);
+    return reply({ error: "Odosielanie z webu nie je nastavené." }, 503);
   }
 
   const response = await sendEmail(env, siteUrl, { to, reply_to: data.email, ...compose(data, siteUrl) });
   if (!response.ok) {
     console.error("Resend error", response.status, await response.text());
-    return reply({ error: "Poptávku se nepodařilo odeslat." }, 503);
+    return reply({ error: "Správu sa nepodarilo odoslať." }, 503);
   }
 
   // Replies to the confirmation go to the recipients, not to the robot sender.

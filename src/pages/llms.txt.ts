@@ -5,6 +5,9 @@ import { getSiteData } from "@/lib/site-data";
 export const GET: APIRoute = () => {
   const data = getSiteData();
   const social = Object.entries(data.contact.social).filter(([, href]) => href);
+  const people = data.contact.people
+    .map((person) => [person.name, person.role, person.phone, person.email].filter(Boolean).join(", "))
+    .filter(Boolean);
   const lines = [
     `# ${data.name}`,
     "",
@@ -12,26 +15,25 @@ export const GET: APIRoute = () => {
     "",
     "## Stránky",
     ...data.pages.map((page) => `- [${page.title}](${page.url})`),
-    `- [Strojově čitelná data (JSON)](${data.url}agent/site.json)`,
+    `- [Strojovo čitateľné dáta (JSON)](${data.url}agent/site.json)`,
     "",
-    "## Proč my",
+    "## Spolupráca",
     ...data.highlights.map((item) => `- **${item.title}**: ${item.description}`),
     "",
-    "## Projekty",
+    "## Práca",
     ...(data.projects.length
       ? data.projects.map((project) => `- [${project.title}](${project.url})${project.subtitle ? ` – ${project.subtitle}` : ""}: ${project.description.split("\n")[0]}`)
-      : ["- Ukázky projektů průběžně doplňujeme."]),
+      : ["- Ukážky práce práve dopĺňam."]),
     "",
-    "## Časté dotazy",
-    ...data.faq.flatMap((item) => [`### ${item.question}`, item.answer, ""]),
+    ...(data.faq.length ? ["## Časté otázky", ...data.faq.flatMap((item) => [`### ${item.question}`, item.answer, ""])] : []),
     "## Kontakt",
-    `- Adresa: ${data.contact.address} (${data.contact.note})`,
-    ...data.contact.people.map((person) => `- ${person.name}, ${person.role}: ${person.phone}, ${person.email}`),
-    `- ${data.contact.company.legalName}${data.contact.company.ico ? `, IČO ${data.contact.company.ico}` : ""}`,
+    ...(data.contact.address ? [`- Miesto: ${data.contact.address}`] : []),
+    ...people.map((person) => `- ${person}`),
+    `- Kontaktný formulár: ${data.url}kontakt/`,
     ...social.map(([name, href]) => `- ${name}: ${href}`),
     "",
-    "## Pro AI agenty",
-    "- Poptávku nikdy neodesílejte za návštěvníka; formulář na stránce Kontakt odesílá jen člověk.",
+    "## Pre AI agentov",
+    "- Formulár nikdy neodosielajte za návštevníka; formulár na stránke Kontakt odosiela iba človek.",
     "",
   ];
   return new Response(lines.join("\n"), {

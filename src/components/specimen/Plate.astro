@@ -1,0 +1,128 @@
+---
+/**
+ * One plate of the specimen (docs/creative/experience.md): a margin column
+ * with the plate number, the CSS feature the plate runs on and its Baseline
+ * status, and the content column with the title and the live sample.
+ *
+ * The margin is sticky on wide screens and doubles as a live demo of
+ * scroll-state container queries: its readout switches from "stuck: none" to
+ * "stuck: top" while it is pinned (Chromium; elsewhere the readout is hidden).
+ */
+export interface Props {
+  id: string;
+  /** "01", "02", … */
+  number: string;
+  title: string;
+  /** The CSS the plate is built with, shown as code. */
+  feature: string;
+  /** Baseline status in words (css-first snapshot). */
+  baseline?: string;
+  class?: string;
+}
+
+const { id, number, title, feature, baseline, class: className } = Astro.props;
+---
+
+<section id={id} class:list={["plate", className]} aria-labelledby={`${id}-title`}>
+  <div class="plate__margin">
+    <div class="plate__notes">
+      <p class="plate__no">Tab. {number}</p>
+      <p class="plate__feature"><code>{feature}</code></p>
+      {baseline && <p class="plate__baseline">Baseline: {baseline}</p>}
+      <slot name="margin" />
+      <p class="plate__state" aria-hidden="true"></p>
+    </div>
+  </div>
+  <div class="plate__body">
+    <h2 id={`${id}-title`} class="plate__title">{title}</h2>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .plate {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    padding-block: clamp(3.5rem, 9vw, 7.5rem);
+    border-block-start: 1px solid var(--color-border-strong);
+  }
+
+  .plate__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .plate__no {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .plate__feature code {
+    font-size: inherit;
+    color: var(--color-foreground);
+  }
+
+  .plate__state {
+    display: none;
+  }
+
+  .plate__title {
+    max-inline-size: 14.9em; /* em, not ch: ch changes with the font (swap) */
+    font-size: clamp(2rem, 5.2vw, 4.25rem);
+    font-variation-settings: "wdth" 112;
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  @media (min-width: 56rem) {
+    .plate {
+      grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+    }
+
+    /* The margin column is the scroll-state container; its notes stay pinned. */
+    .plate__margin {
+      position: sticky;
+      inset-block-start: calc(var(--header-height) + 1.5rem);
+      align-self: start;
+      container-type: scroll-state;
+      container-name: plate-margin;
+    }
+
+    .plate__notes {
+      flex-direction: column;
+      gap: 0.35rem;
+      padding-block-start: 0.5rem;
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    @supports (container-type: scroll-state) {
+      .plate__state {
+        display: block;
+        color: var(--color-subtle);
+      }
+
+      .plate__state::before {
+        content: "stuck: none";
+      }
+
+      @container plate-margin scroll-state(stuck: top) {
+        .plate__state {
+          color: var(--color-primary);
+        }
+
+        .plate__state::before {
+          content: "stuck: top";
+        }
+      }
+    }
+  }
+</style>

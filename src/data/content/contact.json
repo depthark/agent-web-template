@@ -1,23 +1,22 @@
 {
   "seo": {
     "title": "Kontakt",
-    "description": "Kontaktujte nás – telefon, e-mail, adresa a poptávkový formulář.",
+    "description": "Workshop, prednáška, konzultácia alebo mentoring – napíšte Lukášovi Chylíkovi pár viet o tom, čo riešite.",
     "keywords": []
   },
-  "title": "Pojďme se domluvit",
-  "text": "Napište nám pár vět o tom, co potřebujete, a ozveme se s dalším postupem.",
+  "title": "Napíšte, čo riešite",
+  "text": "Workshop pre tím, prednáška na konferenciu alebo druhý pár očí na dizajnový systém. Pár viet stačí – ozvem sa s návrhom ďalšieho postupu.",
   "form": {
-    "recipients": [
-      "info@example.cz"
-    ],
+    "recipients": [],
     "topics": [
-      "První služba",
-      "Druhá služba",
-      "Něco jiného"
+      "Workshop alebo tréning",
+      "Prednáška",
+      "Konzultácia alebo mentoring",
+      "Iné"
     ],
-    "successTitle": "Zpráva byla úspěšně odeslána",
-    "successText": "Děkujeme za vaši zprávu, budeme vás kontaktovat v nejbližším možném termínu.",
-    "confirmationSubject": "Děkujeme za vaši zprávu",
-    "confirmationText": "Dobrý den,\n\nděkujeme za vaši zprávu, budeme vás kontaktovat v nejbližším možném termínu.\n\nNíže posíláme kopii toho, co jste nám napsali."
+    "successTitle": "Správa odišla",
+    "successText": "Ďakujem, ozvem sa vám čo najskôr.",
+    "confirmationSubject": "Ďakujem za správu",
+    "confirmationText": "Dobrý deň,\n\nďakujem za správu, ozvem sa vám čo najskôr.\n\nNižšie posielam kópiu toho, čo ste napísali."
   }
 }

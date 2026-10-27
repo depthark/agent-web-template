@@ -1,0 +1,129 @@
+---
+/**
+ * Tab. 05 sample: the OKLCH gamut slice (WebGL via <ShaderCanvas>, the one
+ * declared exception to "CSS only"). The CSS fallback is the same idea with
+ * oklch gradient interpolation; the vermilion marker is HTML, so it is there
+ * in every version and in forced colours.
+ */
+import ShaderCanvas from "@/components/creative/ShaderCanvas.astro";
+import { oklchGamut } from "@/lib/shaders/oklch-gamut";
+
+// The site's primary colour (tailwind.source.css, light theme): oklch(0.53 0.19 33).
+const marker = { l: 0.53, c: 0.19, h: 33 };
+---
+
+<figure class="gamut">
+  <div class="gamut__field">
+    <ShaderCanvas
+      fragment={oklchGamut}
+      colors={["var(--color-background)", "var(--color-foreground)", "var(--color-primary)", "var(--color-border)"]}
+      fps={30}
+      dpr={1.5}
+    >
+      <div slot="fallback" class="gamut__fallback"></div>
+    </ShaderCanvas>
+    <span class="gamut__marker" style={`--x: ${(marker.h / 360) * 100}%; --y: ${(1 - marker.l) * 100}%`}>
+      <span class="gamut__dot" aria-hidden="true"></span>
+      <span class="gamut__label">primary · oklch({marker.l} {marker.c} {marker.h})</span>
+    </span>
+    <span class="gamut__axis gamut__axis--x" aria-hidden="true">h 0° → 360°</span>
+    <span class="gamut__axis gamut__axis--y" aria-hidden="true">L 0 → 1</span>
+  </div>
+  <figcaption class="gamut__caption">
+    Odtieň zľava doprava, svetlosť zdola nahor.{" "}
+    <span class="gamut__note gamut__note--live">Každý bod = najsýtejšia farba, ktorú sRGB zobrazí. Čiara = hranica pre práve zvolenú sýtosť, závoj = farby, na ktoré už nestačí.</span>
+    <span class="gamut__note gamut__note--still">Bez WebGL: prechod interpolovaný v <code>oklch</code>, bez hranice gamutu.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .gamut__field {
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 2 / 1;
+    border: 1px solid var(--color-border-strong);
+    overflow: hidden;
+  }
+
+  .gamut__fallback {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, oklch(1 0 0 / 0.92), oklch(1 0 0 / 0) 45%, oklch(0 0 0 / 0) 55%, oklch(0 0 0 / 0.92)),
+      linear-gradient(90deg, #d0324f, #d9771f, #a6a21b, #2fa36a, #1f98b5, #5a73d6, #a052c4, #d0324f);
+    background:
+      linear-gradient(to bottom, oklch(1 0 0 / 0.92), oklch(1 0 0 / 0) 45%, oklch(0 0 0 / 0) 55%, oklch(0 0 0 / 0.92)),
+      linear-gradient(to right in oklch longer hue, oklch(0.65 0.16 0), oklch(0.65 0.16 359.9));
+  }
+
+  .gamut__marker {
+    position: absolute;
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    translate: -0.5rem -50%;
+  }
+
+  .gamut__dot {
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-surface-elevated);
+    outline: 1px solid var(--color-foreground);
+    background: var(--color-primary);
+  }
+
+  .gamut__label,
+  .gamut__axis {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    padding: 0.15rem 0.4rem;
+    background: var(--color-surface-elevated);
+    color: var(--color-foreground);
+    white-space: nowrap;
+  }
+
+  .gamut__axis {
+    position: absolute;
+    color: var(--color-muted);
+  }
+
+  .gamut__axis--x {
+    inset-inline-end: 0.5rem;
+    inset-block-end: 0.5rem;
+  }
+
+  .gamut__axis--y {
+    inset-inline-start: 0.5rem;
+    inset-block-start: 0.5rem;
+  }
+
+  .gamut__caption {
+    margin-block-start: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  /* The caption describes whichever version is showing. */
+  .gamut__note--live {
+    display: none;
+  }
+
+  .gamut:has(:global([data-ready])) .gamut__note--live {
+    display: inline;
+  }
+
+  .gamut:has(:global([data-ready])) .gamut__note--still {
+    display: none;
+  }
+
+  @media (forced-colors: active) {
+    .gamut__fallback {
+      background: Canvas;
+    }
+  }
+</style>

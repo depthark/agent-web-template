@@ -1,0 +1,8 @@
+{
+  "order": 1,
+  "slug": "vigo",
+  "title": "VIGo Design System",
+  "subtitle": "Vienna Insurance Group · lead developer",
+  "text": "Dizajnový systém pre poisťovne skupiny Vienna Insurance Group, v ktorom vediem vývoj.\n\n- **124 komponentov**, ktorých vlastnosti riadi viac než **2 000 dizajnových premenných**\n- postavený na Reacte s vlastným frameworkom nad PrimeReact\n- používajú ho back-office aplikácie Kooperativy a ČPP a Global Expert\n- vznikal za chodu spolu s projektom Neuron, ktorý zjednocuje back-office oboch poisťovní\n\n[Dokumentácia VIGo](https://vigo.vig.cz/dashboard/get-started/introduction)",
+  "images": []
+}

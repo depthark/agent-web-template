@@ -1,0 +1,85 @@
+---
+/**
+ * Tiráž: what the page is made of. The JavaScript line is measured in the
+ * visitor's browser after load (Resource Timing for files + the inline
+ * scripts), so it never lies when the page changes – the meter counts itself.
+ */
+import { site } from "@/data/site";
+
+const { colophon } = site.home.plates;
+---
+
+<section id="tiraz" class="colophon" aria-labelledby="tiraz-title">
+  <h2 id="tiraz-title" class="colophon__title">{colophon.title}</h2>
+  <p class="colophon__text">{colophon.text}</p>
+  <dl class="colophon__facts">
+    <div>
+      <dt>JavaScript na tejto stránke</dt>
+      <dd>
+        <output id="js-weight">–</output>
+        <noscript>0 kB – JavaScript máte vypnutý a stránka funguje celá.</noscript>
+      </dd>
+    </div>
+    <div>
+      <dt>Animácie</dt>
+      <dd>CSS: <code>animation-timeline</code>, <code>@property</code>, <code>@starting-style</code></dd>
+    </div>
+    <div>
+      <dt>Prechody medzi stránkami</dt>
+      <dd><code>@view-transition</code> – bez routera</dd>
+    </div>
+  </dl>
+</section>
+
+<script is:inline>
+  addEventListener("load", () => {
+    const out = document.getElementById("js-weight");
+    if (!out) return;
+    const inline = [...document.scripts]
+      .filter((s) => !s.src && !/json|shader/.test(s.type))
+      .reduce((sum, s) => sum + new Blob([s.text]).size, 0);
+    const files = performance
+      .getEntriesByType("resource")
+      .filter((r) => r.initiatorType === "script")
+      .reduce((sum, r) => sum + (r.decodedBodySize || 0), 0);
+    out.textContent = `${((inline + files) / 1024).toFixed(1).replace(".", ",")} kB (nekomprimované, vrátane tohto merača)`;
+  });
+</script>
+
+<style>
+  .colophon {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    border-block-start: 1px solid var(--color-border-strong);
+  }
+
+  .colophon__title {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-variation-settings: "wdth" 125;
+    font-weight: 700;
+  }
+
+  .colophon__text {
+    margin-block-start: 1rem;
+    max-inline-size: 68ch;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  .colophon__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.5rem 2rem;
+    margin-block-start: 2rem;
+  }
+
+  .colophon__facts dt {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-primary);
+  }
+
+  .colophon__facts dd {
+    margin-block-start: 0.35rem;
+    line-height: 1.6;
+  }
+</style>

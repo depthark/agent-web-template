@@ -40,7 +40,7 @@ const alignClass =
     alignClass,
     className,
   ]}
-  aria-label="Sociální sítě"
+  aria-label="Sociálne siete"
 >
   {
     items.map(({ label, href, Icon, hint }) => (
@@ -50,7 +50,7 @@ const alignClass =
           target="_blank"
           rel="noreferrer"
           title={hint}
-          aria-label={`${hint} (otevře se v novém okně)`}
+          aria-label={`${hint} (otvorí sa v novom okne)`}
           class:list={[
             "group inline-flex items-center justify-center rounded-full text-foreground transition-colors duration-fast ease-standard hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             variant === "card"

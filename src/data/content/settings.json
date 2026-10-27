@@ -1,44 +1,42 @@
 {
-  "name": "Název firmy",
-  "tagline": "Krátký podtitul značky",
-  "description": "Jedna až dvě věty o tom, co firma dělá, pro koho a kde. Použije se jako výchozí popis pro Google a sdílení.",
-  "language": "cs",
+  "name": "Lukáš Chylík",
+  "tagline": "Kreatívny webový vývojár",
+  "description": "Lukáš Chylík, Brno – frontend s presahom do UX/UI, dizajnové systémy, moderné CSS a AI v praxi. Workshopy, prednášky a konzultácie.",
+  "language": "sk",
   "keywords": [
-    "hlavní služba město",
-    "druhá služba",
-    "Název firmy"
+    "frontend vývojár Brno",
+    "moderné CSS",
+    "dizajnové systémy",
+    "AI workshop pre frontend",
+    "Lukáš Chylík"
   ],
   "social": {
     "facebook": "",
-    "instagram": ""
+    "instagram": "",
+    "linkedin": "https://www.linkedin.com/in/lukas-chylik/",
+    "github": "https://github.com/luko248"
   },
   "company": {
-    "legalName": "Název firmy s.r.o.",
-    "ico": "00000000",
-    "street": "Ulice 1",
-    "postalCode": "000 00",
-    "city": "Město",
-    "region": "Kraj",
+    "legalName": "Lukáš Chylík",
+    "ico": "",
+    "street": "",
+    "postalCode": "",
+    "city": "Brno",
+    "region": "Juhomoravský kraj",
     "country": "CZ",
-    "areaServed": "Město a okolí",
+    "areaServed": "Česko a Slovensko",
     "geo": {
-      "latitude": 50.0755,
-      "longitude": 14.4378
+      "latitude": 49.1951,
+      "longitude": 16.6068
     },
-    "openingHours": [
-      {
-        "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        "opens": "09:00",
-        "closes": "17:00"
-      }
-    ],
-    "openingNote": "Schůzky po předchozí domluvě.",
+    "openingHours": [],
+    "openingNote": "",
     "contacts": [
       {
-        "name": "Jméno Příjmení",
-        "role": "Kontaktní osoba",
-        "phone": "+420 000 000 000",
-        "email": "info@example.cz"
+        "name": "Lukáš Chylík",
+        "role": "Kreatívny webový vývojár",
+        "phone": "",
+        "email": ""
       }
     ],
     "mapEmbed": ""

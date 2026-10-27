@@ -9,7 +9,7 @@ backend:
   name: github
   repo: OWNER/REPO # ← set for a new site (new-project skill)
   branch: main
-  base_url: https://www.example.cz # ← production URL (OAuth functions run there)
+  base_url: https://lukaschylik.dev # ← production URL (OAuth functions run there)
   auth_endpoint: api/auth
   squash_merges: true
   commit_messages:
@@ -26,8 +26,8 @@ publish_mode: editorial_workflow
 local_backend: true
 
 locale: cs
-site_url: https://www.example.cz
-display_url: https://www.example.cz
+site_url: https://lukaschylik.dev
+display_url: https://lukaschylik.dev
 logo_url: /images/favicons/web-app-manifest-192x192.png
 
 slug:
@@ -108,8 +108,8 @@ collections:
               - { name: eyebrow, label: Drobný text nad nadpisem, widget: string }
               - { name: title, label: Hlavní nadpis, widget: text, hint: "Krátce a výstižně – je to první, co návštěvník uvidí." }
               - { name: text, label: Podnadpis, widget: text, required: false, hint: "Nepovinné – když zůstane prázdné, pod nadpisem nic není." }
-              - { name: image, label: Fotka na pozadí, widget: photo, hint: "Na šířku, ideálně 2400 px. Zobrazuje se ztmavená." }
-              - { name: imageAlt, label: Popis fotky, widget: string, hint: "Co je na fotce – pro nevidomé a vyhledávače." }
+              - { name: image, label: Fotka na pozadí, widget: photo, required: false, hint: "Na tomto webu se nepoužívá (obrázkem je písmo)." }
+              - { name: imageAlt, label: Popis fotky, widget: string, required: false }
               - name: primaryCta
                 label: Hlavní tlačítko
                 widget: object
@@ -149,6 +149,76 @@ collections:
             fields:
               - { name: question, label: Otázka, widget: string }
               - { name: answer, label: Odpověď, widget: text }
+          - name: plates
+            label: Tabule špecimenu
+            widget: object
+            collapsed: true
+            hint: "Obsah číslovaných tabulí na úvodní stránce. Popisky CSS vlastností vedľa tabulí sú v kóde (popisujú, ako je tabuľa postavená)."
+            fields:
+              - name: system
+                label: "Tab. 01 – Systém (VIGo)"
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - { name: text, label: Text, widget: text }
+                  - { name: components, label: Počet komponent, widget: number, value_type: int }
+                  - { name: variables, label: Počet proměnných (text), widget: string }
+                  - { name: href, label: Odkaz, widget: string }
+              - name: writing
+                label: "Tab. 03 – Texty"
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - name: items
+                    label: Články
+                    widget: list
+                    fields:
+                      - { name: year, label: Rok, widget: string }
+                      - { name: title, label: Název, widget: string }
+                      - { name: href, label: Odkaz, widget: string }
+                  - { name: moreLabel, label: Text odkazu na všechny články, widget: string }
+                  - { name: moreHref, label: Odkaz na všechny články, widget: string }
+              - name: talks
+                label: "Tab. 04 – Pódium"
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - { name: text, label: Text, widget: string, required: false }
+                  - name: items
+                    label: Přednášky a akce
+                    widget: list
+                    fields:
+                      - { name: date, label: "Datum (RRRR-MM)", widget: string }
+                      - { name: event, label: Akce, widget: string }
+                      - { name: place, label: Místo, widget: string }
+                      - { name: title, label: Téma, widget: string }
+              - name: color
+                label: "Tab. 05 – Farba"
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - { name: text, label: Text, widget: text }
+                  - { name: linkLabel, label: Text odkazu, widget: string }
+                  - { name: href, label: Odkaz, widget: string }
+              - name: tools
+                label: "Tab. 06 – Nástroje"
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - name: items
+                    label: Nástroje
+                    widget: list
+                    fields:
+                      - { name: name, label: Název, widget: string }
+                      - { name: kind, label: Typ, widget: string }
+                      - { name: text, label: Popis, widget: text }
+                      - { name: href, label: Odkaz, widget: string }
+              - name: colophon
+                label: Tiráž
+                widget: object
+                fields:
+                  - { name: title, label: Nadpis, widget: string }
+                  - { name: text, label: Text, widget: text }
           - name: cta
             label: Výzva na konci stránky
             widget: object
@@ -210,7 +280,7 @@ collections:
           - { name: name, label: Název firmy, widget: string }
           - { name: tagline, label: Podtitul, widget: string }
           - { name: description, label: Popis firmy (vyhledávače), widget: text }
-          - { name: language, label: Jazyk webu, widget: hidden, default: cs }
+          - { name: language, label: Jazyk webu, widget: hidden, default: sk }
           - name: keywords
             label: Klíčová slova
             widget: list
@@ -230,6 +300,8 @@ collections:
             fields:
               - { name: facebook, label: Facebook, widget: string, required: false }
               - { name: instagram, label: Instagram, widget: string, required: false }
+              - { name: linkedin, label: LinkedIn, widget: string, required: false }
+              - { name: github, label: GitHub, widget: string, required: false }
           - name: company
             label: Firma a adresa
             widget: object
@@ -242,14 +314,14 @@ collections:
                 fields:
                   - { name: name, label: Jméno, widget: string }
                   - { name: role, label: Pozice, widget: string }
-                  - { name: phone, label: Telefon, widget: string, hint: "Ve tvaru +420 777 000 000" }
-                  - { name: email, label: E-mail, widget: string }
-              - { name: street, label: Ulice a číslo, widget: string }
-              - { name: postalCode, label: PSČ, widget: string }
+                  - { name: phone, label: Telefon, widget: string, required: false, hint: "Ve tvaru +420 777 000 000" }
+                  - { name: email, label: E-mail, widget: string, required: false }
+              - { name: street, label: Ulice a číslo, widget: string, required: false }
+              - { name: postalCode, label: PSČ, widget: string, required: false }
               - { name: city, label: Město, widget: string }
               - { name: region, label: Kraj, widget: string }
               - { name: country, label: Země (kód), widget: string, default: CZ }
-              - { name: openingNote, label: Poznámka k návštěvě, widget: string }
+              - { name: openingNote, label: Poznámka k návštěvě, widget: string, required: false }
               - name: openingHours
                 label: Otevírací doba
                 label_singular: řádek

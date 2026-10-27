@@ -16,10 +16,21 @@ const centered = align === "center";
 
 <div class:list={["space-y-4", centered && "mx-auto max-w-3xl text-center"]}>
   {eyebrow && (
-    <p class="text-sm font-medium uppercase tracking-eyebrow text-primary">
+    <p class="font-mono text-[0.8125rem] font-semibold text-primary">
       {eyebrow}
     </p>
   )}
-  <Heading id={headingId} class="text-balance text-2xl leading-tight text-foreground sm:text-3xl md:text-5xl">{title}</Heading>
+  <Heading id={headingId} class="intro-title text-balance text-foreground">{title}</Heading>
   {text && <p class:list={["text-base leading-7 text-muted sm:text-lg sm:leading-8", !centered && "max-w-3xl"]}>{text}</p>}
 </div>
+
+<style>
+  .intro-title {
+    max-inline-size: 13.7em; /* em, not ch: ch changes with the font (swap) */
+    font-size: clamp(2.25rem, 6.5vw, 5rem);
+    font-variation-settings: "wdth" 120;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+</style>
