@@ -8,8 +8,12 @@
 import ShaderCanvas from "@/components/creative/ShaderCanvas.astro";
 import { oklchGamut } from "@/lib/shaders/oklch-gamut";
 
-// The site's primary colour (tailwind.source.css, light theme): oklch(0.53 0.19 33).
-const marker = { l: 0.53, c: 0.19, h: 33 };
+// The site's primary colour per theme (tailwind.source.css) – the marker shows
+// the one actually in use, so it never labels a colour the page isn't using.
+const markers = [
+  { theme: "light", l: 0.53, c: 0.19, h: 33 },
+  { theme: "dark", l: 0.72, c: 0.15, h: 38 },
+];
 ---
 
 <figure class="gamut">
@@ -22,10 +26,14 @@ const marker = { l: 0.53, c: 0.19, h: 33 };
     >
       <div slot="fallback" class="gamut__fallback"></div>
     </ShaderCanvas>
-    <span class="gamut__marker" style={`--x: ${(marker.h / 360) * 100}%; --y: ${(1 - marker.l) * 100}%`}>
-      <span class="gamut__dot" aria-hidden="true"></span>
-      <span class="gamut__label">primary · oklch({marker.l} {marker.c} {marker.h})</span>
-    </span>
+    {
+      markers.map((m) => (
+        <span class:list={["gamut__marker", `gamut__marker--${m.theme}`]} style={`--x: ${(m.h / 360) * 100}%; --y: ${(1 - m.l) * 100}%`}>
+          <span class="gamut__dot" aria-hidden="true"></span>
+          <span class="gamut__label">primary · oklch({m.l} {m.c} {m.h})</span>
+        </span>
+      ))
+    }
     <span class="gamut__axis gamut__axis--x" aria-hidden="true">h 0° → 360°</span>
     <span class="gamut__axis gamut__axis--y" aria-hidden="true">L 0 → 1</span>
   </div>
@@ -64,6 +72,15 @@ const marker = { l: 0.53, c: 0.19, h: 33 };
     align-items: center;
     gap: 0.5rem;
     translate: -0.5rem -50%;
+  }
+
+  .gamut__marker--dark,
+  :global([data-theme="dark"]) .gamut__marker--light {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .gamut__marker--dark {
+    display: flex;
   }
 
   .gamut__dot {

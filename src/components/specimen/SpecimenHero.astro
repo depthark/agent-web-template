@@ -32,7 +32,7 @@ const rows = [
 
 <section id="specimen" class="specimen" aria-labelledby="specimen-name">
   <div class="specimen__margin">
-    <div class="specimen__notes">
+    <div class="specimen__notes" aria-hidden="true">
       <p class="specimen__no">Tab. 00</p>
       <p>Špecimen</p>
       <p><code>font-family: Anybody</code></p>
@@ -97,7 +97,7 @@ const rows = [
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
-    padding-block: clamp(2.5rem, 7vw, 6rem) clamp(3rem, 8vw, 6rem);
+    padding-block: clamp(1.5rem, 4vw, 3rem) clamp(3rem, 8vw, 6rem);
     timeline-scope: --specimen-name;
   }
 
@@ -150,7 +150,9 @@ const rows = [
   .specimen__name {
     margin-block-start: 0.75rem;
     font-family: var(--font-heading);
-    font-size: min(18.5cqi, 13rem);
+    font-size: min(21.5cqi, 15rem);
+    /* The axes change on scroll: keep that re-layout inside the name. */
+    contain: layout;
     line-height: 0.86;
     letter-spacing: -0.01em;
     view-timeline: --specimen-name block;
@@ -196,12 +198,13 @@ const rows = [
   /* Waterfall: full width under both columns, lines bleed off the right edge. */
   .waterfall {
     grid-column: 1 / -1;
-    margin-block-start: clamp(2rem, 6vw, 4.5rem);
+    margin-block-start: clamp(1.25rem, 3vw, 2.5rem);
     border-block-start: 1px solid var(--color-border-strong);
     overflow-x: clip;
   }
 
   .waterfall__row {
+    contain: layout paint;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 0.25rem;

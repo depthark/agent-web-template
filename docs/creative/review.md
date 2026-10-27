@@ -49,3 +49,22 @@ Gates: verify ✓ · audit ✓ (0 errors, 1 warning)
 (Agentic-browsing category: 100 on every page.) Warning: 13 ms TBT on /kontakt/ mobile from the form-enhancement script.
 
 Not covered by the lab: the WebGL gamut plate (skipped on software GL by design) – verified separately with the GPU path forced: renders in both themes, 0 frames off-screen, still frame with reduced motion.
+
+## Round 6 – 2026-10-27 (jury #1) ✗
+
+Jury (`creative-jury`): design 7.6 · usability 8.2 · creativity 8.3 · content 7.7 → **7.9 (fail, bar 8.0)**; all gates green. Findings and what was done:
+
+1. *Concept stops at the home page* → /projekty/ projects are plates (P. 01–03, client/role in the margin, closing CTA); /kontakt/ form is **Tab. 07** (`:user-invalid · :has() · subgrid` – what it really runs on), contacts in its margin.
+2. *Three plates labelled features they did not use* → Tab. 02 runs on real `@layer`s (an ID selector in an earlier layer loses to `.layer` in the last one; every card prints the winner); Tab. 06 is an `@supports` table with CSS-only readouts of the visitor's browser; Tab. 05 marker per theme; vermilion hairline drawn under each plate title; print styles.
+3. *No grid break, waterfall not at the fold* → name `min(21.5cqi, 15rem)` bleeds into the margin; hero spacing tightened.
+4. *Anybody draws Slovak ľ wrong* (centred háček) → `lcaron` rebuilt from `l` + the apostrophe caron of `ď` with per-region gvar deltas (correct at every width/weight); `docs/creative/tools/fix-lcaron.py`, documented in `public/fonts/README.md` (OFL, no Reserved Font Name).
+5. *Micro-typography* → `„…“` quotes, no-break spaces, one-letter prepositions bound to the next word site-wide (`typeset()` in `site.ts`), "e-mailu" unbreakable, layer names with diacritics.
+6. *Screen-reader order* → hero notes `aria-hidden`; colophon meter not a live region; arrow `content: "→" / ""`; `lang="en"` on English titles (+ CMS field).
+7. *Contact row* → short unbreakable link texts in the margin.
+8. *Talks* → place shown only when not Brno; Figma talks described by topic (exact titles: open question for Lukáš).
+9. *Header box, footer, list spacing* → hairline-only header; footer is one imprint line; list leading 7.
+10. *Layout cost* → `contain: layout` on the name, `contain: layout paint` on waterfall rows, `content-visibility: auto` on plates (style+layout on load −25 % at 4× CPU).
+
+## Round 7 – 2026-10-27 (gates) ✓
+
+verify ✓ · audit ✓ – Lighthouse 100 in every category on all pages (mobile/desktop), CLS 0, mobile LCP ≤ 1.52 s; warning: home mobile TBT 38 ms (variance 0–94 ms across runs on the shared build machine).

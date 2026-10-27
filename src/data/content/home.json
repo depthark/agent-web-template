@@ -55,22 +55,60 @@
     "writing": {
       "title": "Píšem o tom, čo práve prichádza do prehliadačov",
       "items": [
-        { "year": "2026", "title": "CSS View Transitions", "href": "https://lukaschylik.dev/blog/articles/css-view-transitions/" },
-        { "year": "2026", "title": "Figma Beyond Design", "href": "https://lukaschylik.dev/blog/articles/figma-beyond-design/" },
-        { "year": "2025", "title": "CSS Cascade Layers, @scope a moderné selektory", "href": "https://lukaschylik.dev/blog/articles/css-specificita-cascade-layers-scope/" },
-        { "year": "2025", "title": "Farby na webe v roku 2025", "href": "https://lukaschylik.dev/blog/articles/farby-na-webe-v-roku-2025/" }
+        {
+          "year": "2026",
+          "title": "CSS View Transitions",
+          "href": "https://lukaschylik.dev/blog/articles/css-view-transitions/",
+          "lang": "en"
+        },
+        {
+          "year": "2026",
+          "title": "Figma Beyond Design",
+          "href": "https://lukaschylik.dev/blog/articles/figma-beyond-design/",
+          "lang": "en"
+        },
+        {
+          "year": "2025",
+          "title": "CSS Cascade Layers, @scope a moderné selektory",
+          "href": "https://lukaschylik.dev/blog/articles/css-specificita-cascade-layers-scope/"
+        },
+        {
+          "year": "2025",
+          "title": "Farby na webe v roku 2025",
+          "href": "https://lukaschylik.dev/blog/articles/farby-na-webe-v-roku-2025/"
+        }
       ],
       "moreLabel": "Všetky články",
       "moreHref": "https://lukaschylik.dev/blog/"
     },
     "talks": {
       "title": "Na pódiu a medzi frontendistami",
-      "text": "Hostiteľ meetupov Frontendisti Brno.",
+      "text": "Hostiteľ meetupov Frontendisti Brno. Všetky akcie nižšie sa konali v Brne.",
       "items": [
-        { "date": "2026-05", "event": "Web Science", "place": "Brno", "title": "Prednáška o Figme" },
-        { "date": "2026-03", "event": "Frontendisti Brno", "place": "Brno", "title": "Figma nad rámec dizajnu" },
-        { "date": "2025-10", "event": "FrontKon #25", "place": "Brno", "title": "CSS scroll-state container queries a panel o stave CSS" },
-        { "date": "2025-09", "event": "Frontendisti Brno", "place": "Brno", "title": "Diskusný večer o AI toolingu pre webový vývoj – hostiteľ" }
+        {
+          "date": "2026-05",
+          "event": "Web Science",
+          "place": "Brno",
+          "title": "Téma: Figma od dizajnu ku kódu"
+        },
+        {
+          "date": "2026-03",
+          "event": "Frontendisti Brno",
+          "place": "Brno",
+          "title": "Téma: Figma od dizajnu ku kódu"
+        },
+        {
+          "date": "2025-10",
+          "event": "FrontKon #25",
+          "place": "Brno",
+          "title": "CSS scroll-state container queries a panel o stave CSS"
+        },
+        {
+          "date": "2025-09",
+          "event": "Frontendisti Brno",
+          "place": "Brno",
+          "title": "Diskusný večer o AI toolingu pre webový vývoj – hostiteľ"
+        }
       ]
     },
     "color": {
@@ -82,9 +120,24 @@
     "tools": {
       "title": "Otvorené nástroje",
       "items": [
-        { "name": "css-first", "kind": "Agent skill · MIT", "text": "Naučí AI agenta riešiť rozhranie najprv sémantickým HTML a CSS. 74 ukážok a živé dáta Baseline.", "href": "https://github.com/luko248/css-first-skill" },
-        { "name": "css-first MCP", "kind": "MCP server", "text": "Navrhne riešenie UI úlohy čisto v CSS – s modernými a logickými vlastnosťami a témou cez light-dark().", "href": "https://glama.ai/mcp/servers/@Luko248/css-first" },
-        { "name": "agent-web-template", "kind": "Šablóna webu", "text": "Astro, Decap CMS a Cloudflare Pages s Lighthouse 100 – a kreatívny workflow, ktorým vznikol tento web.", "href": "/projekty/#agent-web-template" }
+        {
+          "name": "css-first",
+          "kind": "Agent skill · MIT",
+          "text": "Naučí AI agenta riešiť rozhranie najprv sémantickým HTML a CSS. 74 ukážok a živé dáta Baseline.",
+          "href": "https://github.com/luko248/css-first-skill"
+        },
+        {
+          "name": "css-first MCP",
+          "kind": "MCP server",
+          "text": "Navrhne riešenie UI úlohy čisto v CSS – s modernými a logickými vlastnosťami a témou cez light-dark().",
+          "href": "https://glama.ai/mcp/servers/@Luko248/css-first"
+        },
+        {
+          "name": "agent-web-template",
+          "kind": "Šablóna webu",
+          "text": "Astro, Decap CMS a Cloudflare Pages s Lighthouse 100 – a kreatívny workflow, ktorým vznikol tento web.",
+          "href": "/projekty/#agent-web-template"
+        }
       ]
     },
     "colophon": {

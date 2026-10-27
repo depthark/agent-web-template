@@ -6,22 +6,45 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
-import Button from "@/components/ui/Button.astro";
 import Plate from "@/components/specimen/Plate.astro";
 import SpecimenHero from "@/components/specimen/SpecimenHero.astro";
 import SystemCells from "@/components/specimen/SystemCells.astro";
 import GamutPlate from "@/components/specimen/GamutPlate.astro";
 import Colophon from "@/components/specimen/Colophon.astro";
+import Closing from "@/components/specimen/Closing.astro";
 import { site } from "@/data/site";
 import { faqPage } from "@/lib/structured-data";
 import { withBase } from "@/lib/navigation";
 
-const { seo, hero, features, faq, cta, plates } = site.home;
+const { seo, hero, features, faq, plates } = site.home;
 
-// CSS identifiers for the services-as-layers plate: first word, no diacritics.
-const layerName = (title: string) =>
-  title.split(" ")[0]!.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+// Tab. 02 runs on real cascade layers: one layer per service (CSS identifiers
+// may contain diacritics). Each layer styles every card with a selector less
+// specific than the one before – and the last layer still wins, which each
+// card prints. Generated from the CMS titles at build time.
+const layerName = (title: string) => title.split(" ")[0]!.toLowerCase().replace(/[^\p{L}\p{N}-]/gu, "");
 const layers = features.items.map((item) => ({ ...item, layer: layerName(item.title) }));
+const layerSelectors = ["#vrstvy .layers .layer", ".layers .layer", ".layer"];
+const layerCss = [
+  `@layer ${layers.map((l) => l.layer).join(", ")};`,
+  ...layers.map(
+    (l, i) =>
+      `@layer ${l.layer} { ${layerSelectors[Math.min(i, layerSelectors.length - 1)]} { --winner: "@layer ${l.layer}"; border-color: ${i === layers.length - 1 ? "var(--color-primary)" : "var(--color-border-strong)"}; } }`,
+  ),
+].join("\n");
+
+// Tab. 06 runs on @supports: features this page uses, each with a CSS-only
+// readout of the visitor's own browser.
+const supports = [
+  { id: "sd", label: "animation-timeline: view()", test: "(animation-timeline: view())", where: "Tab. 00, 01, 03" },
+  { id: "ss", label: "container-type: scroll-state", test: "(container-type: scroll-state)", where: "Tab. 04" },
+  { id: "vt", label: "view-transition-name", test: "(view-transition-name: a)", where: "prechody stránok" },
+  { id: "ok", label: "color: oklch()", test: "(color: oklch(0.5 0.1 30))", where: "celá paleta" },
+  { id: "tw", label: "text-wrap: pretty", test: "(text-wrap: pretty)", where: "odstavce" },
+];
+const supportsCss = supports
+  .map((f) => `@supports ${f.test} { .support[data-f="${f.id}"] .support__yes { display: inline; } .support[data-f="${f.id}"] .support__no { display: none; } }`)
+  .join("\n");
 
 // "2025-10" → "10/2025"
 const monthYear = (date: string) => date.split("-").reverse().join("/");
@@ -76,7 +99,11 @@ const index = [
     </Plate>
 
     <Plate id="vrstvy" number="02" title={features.title} feature="@layer" baseline="široko dostupné">
+      <style is:inline set:html={layerCss}></style>
       <p class="layers__decl"><code>@layer {layers.map((l) => l.layer).join(", ")};</code></p>
+      <p class="layers__note">
+        Každá vrstva farbí všetky karty – s čoraz slabším selektorom, od <code>{layerSelectors[0]}</code> po <code>{layerSelectors[2]}</code>. Aj tak vyhrá posledná vrstva: poradie vrstiev je silnejšie než špecificita. Karty to vypisujú samy.
+      </p>
       <ol class="layers">
         {
           layers.map((item, i) => (
@@ -84,6 +111,7 @@ const index = [
               <p class="layer__name"><code>@layer {item.layer}</code></p>
               <h3 class="layer__title">{item.title}</h3>
               <p class="layer__text">{item.text}</p>
+              <p class="layer__winner" aria-hidden="true">border-color ← <span class="layer__winner-value"></span></p>
             </li>
           ))
         }
@@ -96,7 +124,7 @@ const index = [
           plates.writing.items.map((item, i) => (
             <li class="row" data-reveal style={`--reveal-i: ${i}`}>
               <span class="row__meta">{item.year}</span>
-              <a class="row__link" href={item.href}>{item.title}</a>
+              <a class="row__link" href={item.href} lang={"lang" in item ? (item.lang as string) : undefined}>{item.title}</a>
             </li>
           ))
         }
@@ -112,7 +140,7 @@ const index = [
           plates.talks.items.map((item, i) => (
             <li class="row row--talk" data-reveal style={`--reveal-i: ${i}`}>
               <span class="row__meta"><time datetime={item.date}>{monthYear(item.date)}</time></span>
-              <span class="row__event">{item.event} <span class="row__place">· {item.place}</span></span>
+              <span class="row__event">{item.event}{item.place !== site.company.city && <span class="row__place"> · {item.place}</span>}</span>
               <span class="row__topic">{item.title}</span>
             </li>
           ))
@@ -121,13 +149,31 @@ const index = [
     </Plate>
 
     <Plate id="farba" number="05" title={plates.color.title} feature="oklch() + <canvas>" baseline="široko dostupné">
-      <p slot="margin" class="podium-note">Jediná výnimka z „najprv CSS": 2 kB WebGL. Bez neho tu ostane CSS gradient v <code>oklch</code>.</p>
+      <p slot="margin" class="podium-note">Jediná výnimka z „najprv CSS“: 2&nbsp;kB WebGL. Bez neho tu ostane CSS gradient v&nbsp;<code>oklch</code>.</p>
       <p class="lead">{plates.color.text}</p>
       <div class="mt-8"><GamutPlate /></div>
       <p class="mt-8"><a class="text-link" href={plates.color.href}>{plates.color.linkLabel}</a></p>
     </Plate>
 
     <Plate id="nastroje" number="06" title={plates.tools.title} feature="@supports" baseline="široko dostupné">
+      <style is:inline set:html={supportsCss}></style>
+      <table class="supports">
+        <caption>Vlastnosti tohto webu a váš prehliadač – zisťuje to <code>@supports</code>, bez JavaScriptu</caption>
+        <thead>
+          <tr><th scope="col">Vlastnosť</th><th scope="col">Kde</th><th scope="col">Váš prehliadač</th></tr>
+        </thead>
+        <tbody>
+          {
+            supports.map((f) => (
+              <tr class="support" data-f={f.id}>
+                <th scope="row"><code>{f.label}</code></th>
+                <td>{f.where}</td>
+                <td><span class="support__yes">áno</span><span class="support__no">nie – vidíte pokojnú verziu</span></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
       <ul class="tools">
         {
           plates.tools.items.map((tool) => (
@@ -145,13 +191,7 @@ const index = [
 
     <Colophon />
 
-    <section class="closing" aria-labelledby="cta-title">
-      <p class="closing__eyebrow">{cta.eyebrow}</p>
-      <h2 id="cta-title" class="closing__title">{cta.title}</h2>
-      <Button as="a" href={withBase(cta.href)} variant="primary" size="lg" rel={undefined} class="mt-8 w-full sm:w-auto">
-        {cta.label}
-      </Button>
-    </section>
+    <Closing />
   </main>
   <SiteFooter />
 </BaseLayout>
@@ -161,6 +201,9 @@ const index = [
     max-inline-size: 90rem;
     margin-inline: auto;
     padding-inline: clamp(1rem, 4vw, 3rem);
+    /* The hero name bleeds into the margin on purpose; never a horizontal
+       scrollbar (clip, not hidden: sticky plates keep working). */
+    overflow-x: clip;
   }
 
   /* Obsah – Sutnar-style index: numbers carry the rhythm. */
@@ -243,7 +286,7 @@ const index = [
   }
 
   .text-link::after {
-    content: "→";
+    content: "→" / "";
     margin-inline-start: 0.5em;
     text-decoration: none;
   }
@@ -304,8 +347,9 @@ const index = [
     max-inline-size: 36rem;
     padding: 1.5rem;
     background: var(--color-surface-elevated);
-    border: 1px solid var(--color-border-strong);
-    box-shadow: 0 1px 0 var(--color-border);
+    /* Width and style only – the colour comes from the cascade layers. */
+    border-width: 1px;
+    border-style: solid;
   }
 
   .layer__name {
@@ -319,6 +363,67 @@ const index = [
     font-variation-settings: "wdth" 110;
     font-weight: 700;
     line-height: 1.1;
+  }
+
+  .layers__note {
+    max-inline-size: 62ch;
+    margin-block-start: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .layer__winner {
+    margin-block-start: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .layer__winner-value::after {
+    content: var(--winner);
+    color: var(--color-primary);
+  }
+
+  /* Tab. 06 – support table */
+  .supports {
+    inline-size: 100%;
+    margin-block-start: 2rem;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .supports caption {
+    margin-block-end: 0.75rem;
+    text-align: start;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+
+  .supports :is(th, td) {
+    padding-block: 0.6rem;
+    padding-inline-end: 1rem;
+    border-block-end: 1px solid var(--color-border);
+    text-align: start;
+    vertical-align: baseline;
+  }
+
+  .supports thead th {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-subtle);
+  }
+
+  .support__yes {
+    display: none;
+    color: var(--color-success);
+    font-weight: 600;
+  }
+
+  .support__no {
+    color: var(--color-muted);
   }
 
   .layer__text {
@@ -440,26 +545,4 @@ const index = [
     color: var(--color-muted);
   }
 
-  /* Closing */
-  .closing {
-    padding-block: clamp(4rem, 10vw, 8rem);
-    border-block-start: 1px solid var(--color-border-strong);
-  }
-
-  .closing__eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-primary);
-  }
-
-  .closing__title {
-    margin-block-start: 1rem;
-    max-inline-size: 15.2em; /* em, not ch: ch changes with the font (swap) */
-    font-size: clamp(2.25rem, 6.5vw, 5.5rem);
-    font-variation-settings: "wdth" 120;
-    font-weight: 800;
-    line-height: 0.98;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
 </style>

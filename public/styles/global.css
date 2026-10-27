@@ -214,3 +214,31 @@
   }
 
 }
+
+/* Print: the specimen on paper – text and type, no chrome, no canvas. */
+@media print {
+  header,
+  footer,
+  nav,
+  .shader-stage,
+  [data-shader-stage],
+  .waterfall,
+  .contents {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+
+  section {
+    break-inside: avoid-page;
+  }
+}

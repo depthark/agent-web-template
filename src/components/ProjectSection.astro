@@ -1,6 +1,7 @@
 ---
 /**
- * One project on /projekty/: title, subtitle, rich-text description and gallery.
+ * One project on /projekty/ as a specimen plate (P. 01 …): title, subtitle in
+ * the margin, rich-text description and – when the CMS has photos – a gallery.
  *
  * Photos are image sets in the repo (src/lib/gallery.ts). Tiles offer at most
  * 800 px (1200 px for the large first tile) and crop with the CMS focus point;
@@ -11,15 +12,16 @@ import type { Project } from "@/data/site";
 import { getProjectMedia } from "@/lib/gallery";
 import { focusStyle, LIGHTBOX_MIN, pick, srcsetOf, TILE_MAX, urlOf } from "@/lib/image-set";
 import { renderMarkdown } from "@/lib/markdown";
+import Plate from "@/components/specimen/Plate.astro";
 
 export interface Props {
   project: Project;
+  /** Position on the page, for the plate number (P. 01, P. 02 …). */
+  index: number;
 }
 
-const { project } = Astro.props;
+const { project, index } = Astro.props;
 const galleryId = `project-${project.slug}`;
-const headingId = `${galleryId}-title`;
-const descriptionId = `${galleryId}-description`;
 const media = getProjectMedia(project);
 const descriptionHtml = renderMarkdown(project.text);
 const leads = media.length > 1;
@@ -27,24 +29,9 @@ const tileSizes = "(min-width: 1024px) 320px, (min-width: 640px) 45vw, 92vw";
 const leadSizes = "(min-width: 1024px) 660px, 92vw";
 ---
 
-<section
-  id={project.slug}
-  class="grid gap-8 border-t border-border py-12 first:border-t-0 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14"
-  aria-labelledby={headingId}
-  aria-describedby={descriptionId}
->
-  <div class="space-y-4 lg:sticky lg:top-28 lg:self-start" data-reveal>
-    <h2 id={headingId} class="project-title text-foreground">{project.title}</h2>
-    {
-      project.subtitle && (
-        <p class="font-mono text-[0.8125rem] text-primary">{project.subtitle}</p>
-      )
-    }
-    {media.length > 0 && <div id={descriptionId} class="project-text text-base leading-8 text-muted" set:html={descriptionHtml} />}
-  </div>
-
-  {/* Text-only project: the description takes the second column. */}
-  {media.length === 0 && <div id={descriptionId} class="project-text max-w-[62ch] text-base leading-8 text-muted" set:html={descriptionHtml} />}
+<Plate id={project.slug} prefix="P." number={String(index + 1).padStart(2, "0")} title={project.title}>
+  {project.subtitle && <p slot="margin" class="project-subtitle">{project.subtitle}</p>}
+  <div class="project-text mt-8 max-w-[62ch] text-base leading-7 text-muted" set:html={descriptionHtml} />
 
   {
     media.length > 0 && (
@@ -85,21 +72,16 @@ const leadSizes = "(min-width: 1024px) 660px, 92vw";
       </ul>
     )
   }
-</section>
+</Plate>
 
 <style>
-  /* Display role: wdth 120 / wght 800 – the width its fallback face is
-     calibrated for (BaseLayout), so a late font swap does not re-wrap it. */
-  .project-title {
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
-    font-variation-settings: "wdth" 120;
-    font-weight: 800;
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
+  /* Rich text from the CMS editor: paragraphs, bold, lists, links. */
+  .project-subtitle {
+    flex-basis: 100%;
+    max-inline-size: 15rem;
+    color: var(--color-foreground);
   }
 
-  /* Rich text from the CMS editor: paragraphs, bold, lists, links. */
   .project-text :global(> * + *) {
     margin-top: calc(var(--spacing) * 4);
   }
@@ -112,7 +94,7 @@ const leadSizes = "(min-width: 1024px) 660px, 92vw";
   .project-text :global(ul),
   .project-text :global(ol) {
     display: grid;
-    gap: calc(var(--spacing) * 2);
+    gap: 0.5rem;
     padding-left: 1.25rem;
   }
 

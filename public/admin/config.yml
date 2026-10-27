@@ -176,6 +176,7 @@ collections:
                       - { name: year, label: Rok, widget: string }
                       - { name: title, label: Název, widget: string }
                       - { name: href, label: Odkaz, widget: string }
+                      - { name: lang, label: Jazyk názvu, widget: select, required: false, options: ["en", "cs", "de"], hint: "Jen když název není slovensky (čtečky obrazovky ho pak vysloví správně)." }
                   - { name: moreLabel, label: Text odkazu na všechny články, widget: string }
                   - { name: moreHref, label: Odkaz na všechny články, widget: string }
               - name: talks

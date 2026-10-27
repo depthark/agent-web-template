@@ -4,6 +4,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SectionIntro from "@/components/SectionIntro.astro";
 import Button from "@/components/ui/Button.astro";
+import Plate from "@/components/specimen/Plate.astro";
 import { site } from "@/data/site";
 import { withBase } from "@/lib/navigation";
 
@@ -14,7 +15,12 @@ const inquiryTo = page.form.recipients?.length
   : site.company.contacts.map((person) => person.email);
 const topics = page.form.topics ?? [];
 const social = site.social as Record<string, string>;
-const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+// Short, unbreakable link text: "in/lukas-chylik", "luko248", "lukaschylik.dev/blog".
+const host = (url: string) =>
+  url
+    .replace(/^https?:\/\/(www\.)?/, "")
+    .replace(/^(linkedin\.com|github\.com)\//, "")
+    .replace(/\/$/, "");
 const elsewhere = [
   { label: "LinkedIn", href: social.linkedin },
   { label: "GitHub", href: social.github },
@@ -39,31 +45,29 @@ const elsewhere = [
   <main id="main" class="mx-auto max-w-[90rem] px-[clamp(1rem,4vw,3rem)] py-12 sm:py-16 lg:py-24">
     <SectionIntro level={1} eyebrow="Kontakt" title={page.title} text={page.text} />
 
-    <section class="where mt-10 sm:mt-12" aria-labelledby="where-title">
-      <h2 id="where-title" class="where__title">Kde ma nájdete</h2>
-      <dl class="where__list">
-        <div>
-          <dt>Mesto</dt>
-          <dd>{site.company.city}</dd>
-        </div>
-        {
-          elsewhere.map((link) => (
-            <div>
-              <dt>{link.label}</dt>
-              <dd>
-                <a href={link.href} rel="me" class="where__link">{link.text}</a>
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-    </section>
-
-    <div class="mx-auto mt-10 max-w-3xl sm:mt-12">
-      <section id="poptavka" class="border border-border-strong bg-surface-elevated p-7 md:p-9" aria-labelledby="inquiry-title">
-        <h2 id="inquiry-title" class="text-2xl text-foreground md:text-3xl">Správa</h2>
-        <p id="inquiry-help" class="mt-2 leading-7 text-muted">
-          Pár údajov a správa mi príde rovno do e-mailu.
+    <Plate id="poptavka" number="07" title="Správa" feature=":user-invalid · :has() · subgrid" baseline="široko dostupné" class="mt-12 sm:mt-16">
+      <div slot="margin" class="where">
+        <p class="where__title">Kde ma nájdete</p>
+        <dl class="where__list">
+          <div>
+            <dt>Mesto</dt>
+            <dd>{site.company.city}</dd>
+          </div>
+          {
+            elsewhere.map((link) => (
+              <div>
+                <dt>{link.label}</dt>
+                <dd>
+                  <a href={link.href} rel="me" class="where__link">{link.text}</a>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <div class="inquiry-panel mt-8 max-w-3xl">
+        <p id="inquiry-help" class="leading-7 text-muted">
+          Pár údajov a správa mi príde rovno do <span class="whitespace-nowrap">e-mailu</span>. Formulár sa kontroluje sám, bez JavaScriptu – chyby uvidíte, až keď pole opustíte.
         </p>
 
         <form
@@ -128,50 +132,42 @@ const elsewhere = [
             <button type="button" class="inquiry__again" data-inquiry-again>Napísať ďalšiu správu</button>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </Plate>
   </main>
   <SiteFooter />
 </BaseLayout>
 
 <style>
   .where {
-    padding-block-start: 1.5rem;
-    border-block-start: 1px solid var(--color-border-strong);
+    flex-basis: 100%;
+    margin-block-start: 1rem;
   }
 
   .where__title {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0;
     color: var(--color-primary);
   }
 
   .where__list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1rem 2rem;
-    margin-block-start: 1rem;
+    gap: 0.6rem;
+    margin-block-start: 0.5rem;
   }
 
   .where__list dt {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--color-muted);
+    color: var(--color-subtle);
   }
 
   .where__list dd {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-variation-settings: "wdth" 110;
-    font-weight: 600;
+    color: var(--color-foreground);
   }
 
   .where__link {
     display: inline-flex;
     align-items: center;
-    min-block-size: 2.75rem;
+    min-block-size: 1.5rem;
+    white-space: nowrap;
     color: var(--color-foreground);
     text-decoration: underline;
     text-decoration-thickness: 1px;

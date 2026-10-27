@@ -1,0 +1,42 @@
+---
+/** The last word of a page: the inquiry call to action (home.json → cta). */
+import Button from "@/components/ui/Button.astro";
+import { site } from "@/data/site";
+import { withBase } from "@/lib/navigation";
+
+const { cta } = site.home;
+---
+
+<section class="closing" aria-labelledby="cta-title">
+  <p class="closing__eyebrow">{cta.eyebrow}</p>
+  <h2 id="cta-title" class="closing__title">{cta.title}</h2>
+  <Button as="a" href={withBase(cta.href)} variant="primary" size="lg" rel={undefined} class="mt-8 w-full sm:w-auto">
+    {cta.label}
+  </Button>
+</section>
+
+<style>
+  .closing {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+    padding-block: clamp(4rem, 10vw, 8rem);
+    border-block-start: 1px solid var(--color-border-strong);
+  }
+
+  .closing__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-primary);
+  }
+
+  .closing__title {
+    margin-block-start: 1rem;
+    max-inline-size: 15.2em; /* em, not ch: ch changes with the font (swap) */
+    font-size: clamp(2.25rem, 6.5vw, 5.5rem);
+    font-variation-settings: "wdth" 120;
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+</style>

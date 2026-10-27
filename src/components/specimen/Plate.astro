@@ -12,22 +12,25 @@ export interface Props {
   id: string;
   /** "01", "02", … */
   number: string;
+  /** Numbering prefix: "Tab." for specimen plates, "P." for project plates. */
+  prefix?: string;
   title: string;
-  /** The CSS the plate is built with, shown as code. */
-  feature: string;
+  /** The CSS the plate is built with, shown as code – only when the plate
+   *  really runs on it (the concept's one rule). */
+  feature?: string;
   /** Baseline status in words (css-first snapshot). */
   baseline?: string;
   class?: string;
 }
 
-const { id, number, title, feature, baseline, class: className } = Astro.props;
+const { id, number, prefix = "Tab.", title, feature, baseline, class: className } = Astro.props;
 ---
 
 <section id={id} class:list={["plate", className]} aria-labelledby={`${id}-title`}>
   <div class="plate__margin">
     <div class="plate__notes">
-      <p class="plate__no">Tab. {number}</p>
-      <p class="plate__feature"><code>{feature}</code></p>
+      <p class="plate__no">{prefix} {number}</p>
+      {feature && <p class="plate__feature"><code>{feature}</code></p>}
       {baseline && <p class="plate__baseline">Baseline: {baseline}</p>}
       <slot name="margin" />
       <p class="plate__state" aria-hidden="true"></p>
@@ -41,6 +44,11 @@ const { id, number, title, feature, baseline, class: className } = Astro.props;
 
 <style>
   .plate {
+    /* Off-screen plates skip layout and paint until they come near: the
+       first render of the home page only lays out the hero (TBT headroom on
+       slow phones). Still in the accessibility tree and find-in-page. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1100px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
@@ -72,11 +80,42 @@ const { id, number, title, feature, baseline, class: className } = Astro.props;
     display: none;
   }
 
+  /* A vermilion rule under each title – drawn as the plate enters. */
+  .plate__title::after {
+    content: "";
+    display: block;
+    inline-size: 4rem;
+    block-size: 2px;
+    margin-block-start: 1.25rem;
+    background: var(--color-primary);
+    transform-origin: 0 50%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .plate__title::after {
+        animation-name: draw-rule;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 35%;
+      }
+    }
+  }
+
+  @keyframes draw-rule {
+    from {
+      scale: 0 1;
+    }
+  }
+
   .plate__title {
     max-inline-size: 14.9em; /* em, not ch: ch changes with the font (swap) */
     font-size: clamp(2rem, 5.2vw, 4.25rem);
-    font-variation-settings: "wdth" 112;
-    font-weight: 700;
+    /* Display role (wdth 120 / wght 800): its fallback face is calibrated
+       for exactly this, so a late font swap does not re-wrap titles. */
+    font-variation-settings: "wdth" 120;
+    font-weight: 800;
     line-height: 1.02;
     letter-spacing: -0.025em;
     text-wrap: balance;
