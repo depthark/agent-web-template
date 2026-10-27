@@ -22,7 +22,7 @@ bun run audit      # real browser on every sitemap page + Lighthouse mobile/desk
 | Build, types | `verify` | 0 errors |
 | Source rules (zoom, cursor, tabindex, scroll hijack, autoplay, loops without reduced motion, WebGL without pause) | `creative-check` | 0 errors |
 | Budgets per page | `creative-check` | HTML ≤ 50 kB gz, initial JS ≤ 50 kB, lazy JS ≤ 300 kB |
-| Markup (lang, one h1, alt, canvas role, no 3rd-party CSS/JS) | `creative-check` | 0 errors |
+| Markup (lang, one h1, alt, canvas role, no 3rd-party CSS/JS, no scroll timeline folded into the `animation` shorthand) | `creative-check` | 0 errors |
 | Console errors | `audit` | none, both themes and viewports |
 | Reduced motion | `audit` | no rAF loop, no endless animation |
 | Reflow 320 px | `audit` | no horizontal scroll |

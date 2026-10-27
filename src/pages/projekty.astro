@@ -55,15 +55,15 @@ const page = site.projectsPage;
 </BaseLayout>
 
 <script>
-  import { Fancybox } from "@fancyapps/ui";
+  // Fancybox (~37 kB gz) is imported only when the page has a gallery; a
+  // text-only project list ships no lightbox code at all.
+  if (document.querySelector("[data-fancybox]")) import("@fancyapps/ui").then(({ Fancybox }) => {
+    // Lightbox styles are only needed once a photo is opened.
+    let styles: Promise<unknown> | undefined;
+    const loadStyles = () => (styles ??= import("@fancyapps/ui/dist/fancybox/fancybox.css"));
+    document.addEventListener("pointerover", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles(), { passive: true });
+    document.addEventListener("focusin", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles());
 
-  // Lightbox styles are only needed once a photo is opened.
-  let styles: Promise<unknown> | undefined;
-  const loadStyles = () => (styles ??= import("@fancyapps/ui/dist/fancybox/fancybox.css"));
-  document.addEventListener("pointerover", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles(), { passive: true });
-  document.addEventListener("focusin", (e) => (e.target as Element)?.closest?.("[data-fancybox]") && loadStyles());
-
-  const init = () =>
     Fancybox.bind("[data-fancybox]", {
       Hash: true,
       Toolbar: {
@@ -76,11 +76,5 @@ const page = site.projectsPage;
       Images: { zoom: true },
       on: { init: () => loadStyles() },
     } as unknown as Parameters<typeof Fancybox.bind>[1]);
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
-  }
-  document.addEventListener("astro:page-load", init);
+  });
 </script>

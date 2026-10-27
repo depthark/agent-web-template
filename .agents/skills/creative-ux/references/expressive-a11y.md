@@ -23,6 +23,7 @@ Award sites break these most. Each is a hard gate in `creative-review` (WCAG 2.2
 | Content order = visual order | 1.3.2 / 2.4.3 | Grid placement must not reorder reading; check Tab order on asymmetric layouts |
 | Colour not the only signal | 1.4.1 | States also by text/shape |
 | Non-text contrast ≥ 3:1 | 1.4.11 | Thin hairline buttons, outline CTAs over photos |
+| Fades never on body text or forms | 1.4.3 | A scroll reveal that fades text leaves anything straddling the fold mid-fade (Lighthouse/axe never scroll → contrast failure, and real users see grey text). Reveal text with transform only, or not at all; fade only images and decoration |
 
 ## Operating
 

@@ -212,6 +212,12 @@ if (!existsSync(DIST)) {
       }
     }
     if (/<meta[^>]*name=["']viewport["'][^>]*(maximum-scale|user-scalable=(no|0))/.test(html)) error(page, "zoom blocked", "Remove maximum-scale / user-scalable.");
+    // The CSS minifier (Lightning CSS) folds animation-timeline into the
+    // "animation" shorthand; Chromium rejects that form and drops the whole
+    // declaration, so the scroll-driven animation silently never runs.
+    for (const m of html.matchAll(/animation:[^;}"]*(\b(?:view|scroll)\(|\s--[a-z][\w-]*(?=[\s;}]))/gi)) {
+      error(page, "scroll timeline folded into the animation shorthand", `"${m[0].slice(0, 80)}" – write animation-name / -timing-function / -fill-mode / -timeline as longhands (creative-dev → patterns).`);
+    }
   }
 }
 
