@@ -4,9 +4,9 @@
  * with the plate number, the CSS feature the plate runs on and its Baseline
  * status, and the content column with the title and the live sample.
  *
- * The margin is sticky on wide screens and doubles as a live demo of
- * scroll-state container queries: its readout switches from "stuck: none" to
- * "stuck: top" while it is pinned (Chromium; elsewhere the readout is hidden).
+ * The margin is sticky on wide screens. With `state`, it doubles as a live
+ * demo of scroll-state container queries: its readout switches from
+ * "stuck: none" to "stuck: top" while pinned (Chromium; elsewhere hidden).
  */
 export interface Props {
   id: string;
@@ -20,10 +20,12 @@ export interface Props {
   feature?: string;
   /** Baseline status in words (css-first snapshot). */
   baseline?: string;
+  /** Show the live scroll-state readout – only on the plate about it. */
+  state?: boolean;
   class?: string;
 }
 
-const { id, number, prefix = "Tab.", title, feature, baseline, class: className } = Astro.props;
+const { id, number, prefix = "Tab.", title, feature, baseline, state = false, class: className } = Astro.props;
 ---
 
 <section id={id} class:list={["plate", className]} aria-labelledby={`${id}-title`}>
@@ -33,7 +35,7 @@ const { id, number, prefix = "Tab.", title, feature, baseline, class: className 
       {feature && <p class="plate__feature"><code>{feature}</code></p>}
       {baseline && <p class="plate__baseline">Baseline: {baseline}</p>}
       <slot name="margin" />
-      <p class="plate__state" aria-hidden="true"></p>
+      {state && <p class="plate__state" aria-hidden="true"></p>}
     </div>
   </div>
   <div class="plate__body">
@@ -44,11 +46,6 @@ const { id, number, prefix = "Tab.", title, feature, baseline, class: className 
 
 <style>
   .plate {
-    /* Off-screen plates skip layout and paint until they come near: the
-       first render of the home page only lays out the hero (TBT headroom on
-       slow phones). Still in the accessibility tree and find-in-page. */
-    content-visibility: auto;
-    contain-intrinsic-size: auto 1100px;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;

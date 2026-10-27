@@ -68,3 +68,20 @@ Jury (`creative-jury`): design 7.6 · usability 8.2 · creativity 8.3 · content
 ## Round 7 – 2026-10-27 (gates) ✓
 
 verify ✓ · audit ✓ – Lighthouse 100 in every category on all pages (mobile/desktop), CLS 0, mobile LCP ≤ 1.52 s; warning: home mobile TBT 38 ms (variance 0–94 ms across runs on the shared build machine).
+
+## Round 8 – 2026-10-27 (jury #2) ✓
+
+Jury (`creative-jury`): design 8.3 · usability 7.4 · creativity 8.6 · content 8.2 → **8.1 (pass)**; originality tests 6/6. All ten round-1 findings fixed or partly fixed; one regression. Findings and what was done:
+
+1. *`content-visibility: auto` breaks anchor jumps* – smooth scroll aimed at the 1100/500/600 px placeholders and overshot by up to 1,157 px; the reduced-motion audit shot was ~70 % blank → removed from Plate, Colophon and Closing. Every index, cross-page and in-page anchor now lands at 90 px (mobile and desktop, Playwright); TBT stays 0 ms without it.
+2. *Home mobile TBT 38 ms* – the 2D colour probe was created at module evaluation → created on first use, after the visibility gate. TBT 0 ms on every page.
+3. *Tab. 07 margin links 24 px* → 44 px (`min-block-size: 2.75rem`), list gap tightened.
+4. *Fold hides the waterfall; eyebrow touches the name* → on ≥ 64 rem the claim and the paragraph sit side by side, the 96 px waterfall line crosses the fold at 1440×900; name clears the eyebrow (`clamp(1.25rem, 2.5vw, 2.25rem)`).
+5. *Duplicate talk rows, one "no" text for every `@supports` row* → one row "Web Science a Frontendisti Brno – Figma: od dizajnu ku kódu (2×)" (exact titles still open); each feature says what its absence costs.
+6. *Noise* → `stuck:` readout only on Tab. 04 (`state` prop); /projekty/ and /kontakt/ intros sit on the plate grid (eyebrow in the margin column).
+
+Also: two one-letter words in a row ("a v") and number + noun ("124 komponentov") are now bound by `typeset()`.
+
+## Round 9 – 2026-10-27 (gates) ✓
+
+verify ✓ · audit ✓ – **0 errors, 0 warnings**. Lighthouse 100 in every category on every page, mobile and desktop; CLS 0; TBT 0 ms everywhere; mobile LCP ≤ 1.52 s.

@@ -43,7 +43,7 @@ const elsewhere = [
 >
   <SiteHeader pathname={Astro.url.pathname} />
   <main id="main" class="mx-auto max-w-[90rem] px-[clamp(1rem,4vw,3rem)] py-12 sm:py-16 lg:py-24">
-    <SectionIntro level={1} eyebrow="Kontakt" title={page.title} text={page.text} />
+    <SectionIntro level={1} plate eyebrow="Kontakt" title={page.title} text={page.text} />
 
     <Plate id="poptavka" number="07" title="Správa" feature=":user-invalid · :has() · subgrid" baseline="široko dostupné" class="mt-12 sm:mt-16">
       <div slot="margin" class="where">
@@ -151,7 +151,7 @@ const elsewhere = [
 
   .where__list {
     display: grid;
-    gap: 0.6rem;
+    gap: 0.25rem;
     margin-block-start: 0.5rem;
   }
 
@@ -166,7 +166,7 @@ const elsewhere = [
   .where__link {
     display: inline-flex;
     align-items: center;
-    min-block-size: 1.5rem;
+    min-block-size: 2.75rem;
     white-space: nowrap;
     color: var(--color-foreground);
     text-decoration: underline;

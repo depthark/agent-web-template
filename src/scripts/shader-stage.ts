@@ -38,8 +38,10 @@ out vec4 fragColor;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 /** Any CSS colour (oklch, color-mix, …) → sRGB 0–1, via a 1×1 2D canvas. */
-const probe = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
+let probe: CanvasRenderingContext2D | null | undefined;
 function toRgb(color: string): [number, number, number] {
+  // Created on first use (after the visibility gate), not at module load.
+  probe ??= document.createElement("canvas").getContext("2d", { willReadFrequently: true });
   if (!probe || !color) return [0, 0, 0];
   probe.clearRect(0, 0, 1, 1);
   probe.fillStyle = "#000";

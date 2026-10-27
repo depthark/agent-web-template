@@ -36,11 +36,11 @@ const layerCss = [
 // Tab. 06 runs on @supports: features this page uses, each with a CSS-only
 // readout of the visitor's own browser.
 const supports = [
-  { id: "sd", label: "animation-timeline: view()", test: "(animation-timeline: view())", where: "Tab. 00, 01, 03" },
-  { id: "ss", label: "container-type: scroll-state", test: "(container-type: scroll-state)", where: "Tab. 04" },
-  { id: "vt", label: "view-transition-name", test: "(view-transition-name: a)", where: "prechody stránok" },
-  { id: "ok", label: "color: oklch()", test: "(color: oklch(0.5 0.1 30))", where: "celá paleta" },
-  { id: "tw", label: "text-wrap: pretty", test: "(text-wrap: pretty)", where: "odstavce" },
+  { id: "sd", label: "animation-timeline: view()", test: "(animation-timeline: view())", where: "Tab. 00, 01, 03", no: "animácie stoja, obsah je celý" },
+  { id: "ss", label: "container-type: scroll-state", test: "(container-type: scroll-state)", where: "Tab. 04", no: "štítok tabule sa nemení" },
+  { id: "vt", label: "view-transition-name", test: "(view-transition-name: a)", where: "prechody stránok", no: "stránky sa prepnú bez prechodu" },
+  { id: "ok", label: "color: oklch()", test: "(color: oklch(0.5 0.1 30))", where: "celá paleta", no: "farby webu sa nezobrazia správne" },
+  { id: "tw", label: "text-wrap: pretty", test: "(text-wrap: pretty)", where: "odstavce", no: "riadky sa zalomia bežne" },
 ];
 const supportsCss = supports
   .map((f) => `@supports ${f.test} { .support[data-f="${f.id}"] .support__yes { display: inline; } .support[data-f="${f.id}"] .support__no { display: none; } }`)
@@ -132,7 +132,7 @@ const index = [
       <p class="mt-8"><a class="text-link" href={plates.writing.moreHref}>{plates.writing.moreLabel}</a></p>
     </Plate>
 
-    <Plate id="podium" number="04" title={plates.talks.title} feature="container-type: scroll-state" baseline="obmedzená dostupnosť">
+    <Plate id="podium" number="04" state title={plates.talks.title} feature="container-type: scroll-state" baseline="obmedzená dostupnosť">
       <p slot="margin" class="podium-note">Popis tabule je sám ukážkou: na širšej obrazovke sa pripne a prepne na <code>stuck: top</code>.</p>
       {plates.talks.text && <p class="lead">{plates.talks.text}</p>}
       <ul class="rows mt-8">
@@ -168,7 +168,7 @@ const index = [
               <tr class="support" data-f={f.id}>
                 <th scope="row"><code>{f.label}</code></th>
                 <td>{f.where}</td>
-                <td><span class="support__yes">áno</span><span class="support__no">nie – vidíte pokojnú verziu</span></td>
+                <td><span class="support__yes">áno</span><span class="support__no">nie – {f.no}</span></td>
               </tr>
             ))
           }

@@ -47,8 +47,10 @@ const rows = [
     <h1 id="specimen-name" class="specimen__name">
       {lines.map((line, i) => <span class="specimen__line" style={`--i: ${i}`}>{line}</span>)}
     </h1>
-    <p class="specimen__claim">{hero.title}</p>
-    {hero.text && <p class="specimen__text">{hero.text}</p>}
+    <div class="specimen__lede">
+      <p class="specimen__claim">{hero.title}</p>
+      {hero.text && <p class="specimen__text">{hero.text}</p>}
+    </div>
     <div class="specimen__ctas">
       <Button as="a" href={withBase(hero.primaryCta.href)} variant="primary" size="lg" rel={undefined} class="w-full sm:w-auto">
         {hero.primaryCta.label}
@@ -148,7 +150,8 @@ const rows = [
   }
 
   .specimen__name {
-    margin-block-start: 0.75rem;
+    /* line-height 0.86 lets the ascenders rise above the box: clear the eyebrow. */
+    margin-block-start: clamp(1.25rem, 2.5vw, 2.25rem);
     font-family: var(--font-heading);
     font-size: min(21.5cqi, 15rem);
     /* The axes change on scroll: keep that re-layout inside the name. */
@@ -168,10 +171,10 @@ const rows = [
   }
 
   .specimen__claim {
-    margin-block-start: clamp(1.5rem, 4vw, 2.5rem);
+    margin-block-start: clamp(1.25rem, 3vw, 2rem);
     max-inline-size: 10.2em; /* em, not ch: ch changes with the font (swap) */
     font-family: "Anybody", "Anybody Claim Fallback", ui-sans-serif, system-ui, sans-serif;
-    font-size: clamp(1.75rem, 5cqi, 3.25rem);
+    font-size: clamp(1.75rem, 4cqi, 2.75rem);
     font-variation-settings: "wdth" 100;
     font-weight: 600;
     line-height: 1.05;
@@ -180,7 +183,7 @@ const rows = [
   }
 
   .specimen__text {
-    margin-block-start: 1.25rem;
+    margin-block-start: 1rem;
     max-inline-size: 60ch;
     font-size: 1.0625rem;
     line-height: 1.7;
@@ -192,7 +195,7 @@ const rows = [
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-block-start: 2rem;
+    margin-block-start: 1.25rem;
   }
 
   /* Waterfall: full width under both columns, lines bleed off the right edge. */
@@ -253,6 +256,21 @@ const rows = [
       grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
       column-gap: clamp(2rem, 5vw, 5rem);
       align-items: baseline;
+    }
+  }
+
+  /* Wide screens: claim and paragraph side by side, so the first line of the
+     waterfall crosses the fold – the specimen invites the scroll. */
+  @media (min-width: 64rem) {
+    .specimen__lede {
+      display: flex;
+      align-items: flex-end;
+      gap: clamp(2rem, 4vw, 4rem);
+    }
+
+    .specimen__lede > .specimen__text {
+      flex: 0 1 34rem;
+      margin-block-start: 0;
     }
   }
 

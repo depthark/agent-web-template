@@ -7,16 +7,19 @@ export interface Props {
   headingId?: string;
   /** 1 for the page's main heading (one per page), 2 for sections. */
   level?: 1 | 2;
+  /** Page intro on a specimen page: on wide screens the eyebrow sits in the
+   *  plate margin column and the heading starts on the plates' content edge. */
+  plate?: boolean;
 }
 
-const { eyebrow, title, text, align = "left", headingId, level = 2 } = Astro.props;
+const { eyebrow, title, text, align = "left", headingId, level = 2, plate = false } = Astro.props;
 const Heading = level === 1 ? "h1" : "h2";
 const centered = align === "center";
 ---
 
-<div class:list={["space-y-4", centered && "mx-auto max-w-3xl text-center"]}>
+<div class:list={["space-y-4", centered && "mx-auto max-w-3xl text-center", plate && "intro--plate"]}>
   {eyebrow && (
-    <p class="font-mono text-[0.8125rem] font-semibold text-primary">
+    <p class="intro-eyebrow font-mono text-[0.8125rem] font-semibold text-primary">
       {eyebrow}
     </p>
   )}
@@ -32,5 +35,26 @@ const centered = align === "center";
     font-weight: 800;
     line-height: 0.98;
     letter-spacing: -0.03em;
+  }
+
+  /* Same columns as Plate.astro, so the book grid holds from the first line. */
+  @media (min-width: 56rem) {
+    .intro--plate {
+      display: grid;
+      grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+      row-gap: 1rem;
+      align-items: baseline;
+    }
+
+    .intro--plate > * {
+      grid-column: 2;
+      margin-block: 0;
+    }
+
+    .intro--plate > .intro-eyebrow {
+      grid-column: 1;
+      grid-row: 1;
+    }
   }
 </style>
